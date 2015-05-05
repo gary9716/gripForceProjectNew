@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gripAndTipForce/gripAndTipForce.iml" filepath="$PROJECT_DIR$/gripAndTipForce/gripAndTipForce.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gripForceProject.iml" filepath="$PROJECT_DIR$/gripForceProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+    </modules>
+  </component>
+</project>

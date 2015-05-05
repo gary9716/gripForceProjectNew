@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">兒童書寫評量系統</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="description" translatable="false">ImageView</string>
+    <string name="hintText" translatable="false">hintText</string>
+    <string name="spd" translatable="false">.spd</string>
+    <string name="png" translatable="false">.png</string>
+    <string name="Title" translatable="false">Title</string>
+    <string name="leftHand">左</string>
+    <string name="rightHand">右</string>
+    <string name="OneLine">一行</string>
+    <string name="SeparateChars">分開的格子</string>
+
+</resources>

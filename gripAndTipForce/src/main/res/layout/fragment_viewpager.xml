@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/explanation_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/explanation_text_margin_left_and_right"
+        android:layout_marginRight="@dimen/explanation_text_margin_left_and_right"
+        android:layout_marginTop="131dp"
+        android:gravity="center"
+        android:text="Large Text"
+        android:textSize="@dimen/bt_setting_text_size" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/explanation_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="132dp"
+        android:padding="@dimen/button_padding"
+        android:text="開始"
+        android:textSize="@dimen/bt_setting_text_size"
+        android:visibility="gone" />
+
+</RelativeLayout>
