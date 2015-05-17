@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -117,9 +118,7 @@ public class ImgFileManager extends FileManager{
 	public String loadImageIntoImageViewWithSizeDependOnGradeAndIndex(
 			int index,
 			int grade,
-			ImageView imageView,
-			int reqWidthInPixels,
-			int reqHeightInPixels) {
+			ImageView imageView) {
 
 		if(templateImageFiles[grade] == null) {
 			templateImageFiles[grade] = getTemplateImageFile(grade);
@@ -133,7 +132,16 @@ public class ImgFileManager extends FileManager{
 			if (index >= templateImageFiles[grade].length) {
 				return endMsg;
 			}
+
+            Log.d("loadImage","fileName:" + templateImageFiles[grade][index].getName());
+
+			Picasso.with(mContext).
+					load(templateImageFiles[grade][index]).
+                    //resize(reqWidthInPixels, reqHeightInPixels)
+					into(imageView, callbackAfterLoadingImage); //async function call
+
             try {
+                progressDialog = null;
                 progressDialog = ProgressDialog.show(mContext,
                         "忙碌中",
                         "圖片讀取中請稍候",
@@ -143,11 +151,6 @@ public class ImgFileManager extends FileManager{
             catch(Exception e) {
                 progressDialog = null;
             }
-
-			Picasso.with(mContext).
-					load(templateImageFiles[grade][index]).
-					resize(reqWidthInPixels, reqHeightInPixels).
-					into(imageView, callbackAfterLoadingImage); //async function call
 
 		}
 		catch(Exception e) {
@@ -166,21 +169,36 @@ public class ImgFileManager extends FileManager{
 		@Override
 		public void onSuccess() {
 			if(progressDialog != null) {
-				progressDialog.dismiss();
+                try {
+                    progressDialog.dismiss();
+                }
+                catch(Exception e) {}
 			}
 		}
 
 		@Override
 		public void onError() {
 			if(progressDialog != null) {
-				progressDialog.dismiss();
+                try {
+                    progressDialog.dismiss();
+                }
+                catch(Exception e) {}
 			}
 			Toast.makeText(mContext, "圖片讀取失敗", Toast.LENGTH_LONG);
 		}
 	};
 
 	public static File[] getTemplateImageFile(int grade) {
-		return (new File(ProjectConfig.getTemplateImagesDirPath(grade))).listFiles(ProjectConfig.templateImageNameFilter);
+        File dir = new File(ProjectConfig.getTemplateImagesDirPath(grade));
+        try {
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            return dir.listFiles(ProjectConfig.templateImageNameFilter);
+        }
+        catch(Exception e) {
+            return null;
+        }
 	}
 
 //	private class LoadBMPTask implements Runnable {

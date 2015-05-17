@@ -17,7 +17,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -133,8 +132,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private String[] additionalSetName = null;
     private Canvas bmpCanvas;
 
-	private int reqWidthInPx = 50;
-	private int reqHeightInPx = 100;
+	//private int reqWidthInPx = 50;
+	//private int reqHeightInPx = 100;
 
 	private void initThreadAndHandler() {
 		mWorkerThread = new HandlerThread(ExperimentActivity.class.getName() + System.currentTimeMillis());
@@ -475,7 +474,9 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			logIndex = templateIndex;
 			numLogsToLoadNow = 1;
 
+            cleanSurfacView(mOneLine);
 			loadNextImageIntoExCharGroup();
+
 			if (isOneLineSessionOver) {
 				showPostExperimentView();
 				return;
@@ -498,9 +499,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		String msg = templateImgFileManager.loadImageIntoImageViewWithSizeDependOnGradeAndIndex(
 				templateIndex,
 				mUserGrade,
-				mExampleCharsGroup,
-				reqWidthInPx,
-				reqHeightInPx);
+				mExampleCharsGroup);
 		if(msg.equals(ImgFileManager.endMsg) || msg.equals(ImgFileManager.errorMsg)) {
 			isOneLineSessionOver = true;
 		}
@@ -614,7 +613,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 			for(int i = 0;i < numLogsToLoad;i++) {
 				txtFileManager.createOrOpenLogFileSync(
-						mFileNamePrefix + (mLogIndex + i + 1),
+						mFileNamePrefix + (mLogIndex + i + 1) + ProjectConfig.txtFileExtension,
 						mCharBoxIndex + i);
 			}
 		}
@@ -697,11 +696,13 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			charGroupsContainer = new LinearLayout(mContext);
 			charGroupsContainer.setOrientation(LinearLayout.VERTICAL);
+            //charGroupsContainer.setGravity(Gravity.CENTER_VERTICAL);
 
 			RelativeLayout.LayoutParams charGroupsContainerLayoutParams = new RelativeLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,  //width
 					LinearLayout.LayoutParams.WRAP_CONTENT); //height
-			charGroupsContainerLayoutParams.topMargin = 100;
+
+			charGroupsContainerLayoutParams.topMargin = 50;
 
 			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
 				charGroupsContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -793,12 +794,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			LinearLayout.LayoutParams imgRLP = new LinearLayout.LayoutParams(
 					charBoxWidth,
-					charBoxOneLineHeight
+                    LinearLayout.LayoutParams.WRAP_CONTENT
 			);
 
 			LinearLayout.LayoutParams oneLine_LP = new LinearLayout.LayoutParams(
 					charBoxWidth,
-					charBoxOneLineHeight
+                    LinearLayout.LayoutParams.MATCH_PARENT
 			);
 
 			otherUIContainer.setLayoutParams(charGroupsContainerLayoutParams);

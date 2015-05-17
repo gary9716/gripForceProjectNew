@@ -101,7 +101,6 @@ public class TxtFileManager extends FileManager{
 		}
 
 		if(writer == null) {
-			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
 			return;
 		}
 

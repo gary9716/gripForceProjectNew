@@ -266,10 +266,6 @@ public class ProjectConfig {
 		}
 	};
 
-//	public static String getTipForceLogFileName(String userID, int grade, int charIndex) {
-//		return tipForceLogPrefix + userID + "_" + grade + "_" + (charIndex + 1) + txtFileExtension;
-//	}
-	
 	public static String getGripForceLogFileName(String userID) {
 		StringBuffer strBuffer = new StringBuffer();
 		strBuffer.append(gripForceLogPrefix);

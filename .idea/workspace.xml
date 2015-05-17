@@ -5,7 +5,7 @@
       <filter>
         <option name="logLevel" value="debug" />
         <option name="logMessagePattern" value="" />
-        <option name="logTagPattern" value="FileDirInfo" />
+        <option name="logTagPattern" value="loadImage" />
         <option name="name" value="Unnamed-2" />
         <option name="packageNamePattern" value="" />
         <option name="pid" value="" />
@@ -41,23 +41,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43803133-d5c6-4e83-8b25-e53a606044be" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/DataSetType.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/picasso_2_5_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TaskRunnerAndDisplayProgressDialogAsyncTask.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TaskRunnerAndDisplayProgressDialogAsyncTask.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/UnderlinesStyledFragmentActivity.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/UnderlinesStyledFragmentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build.gradle" afterPath="$PROJECT_DIR$/library/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/gripAndTipForce.iml" afterPath="$PROJECT_DIR$/gripAndTipForce/gripAndTipForce.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="gripForceProject.iws" />
@@ -95,25 +82,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ExperimentActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ExperimentActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-25.62">
-              <caret line="557" column="23" selection-start-line="557" selection-start-column="23" selection-end-line="557" selection-end-column="23" />
+            <state vertical-scroll-proportion="-10.222222">
+              <caret line="615" column="94" selection-start-line="615" selection-start-column="94" selection-end-line="615" selection-end-column="94" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#setSPenToolActionWithAllCanvases#0;class#8207:9857" expanded="false" />
+                <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
                 <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="method#resetExCharsAndCharBoxes#0;class#ExperimentActivity#0" expanded="false" />
+                <element signature="e#13039#13081#0" expanded="false" />
                 <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="class#CreateOrOpenLogFileTask#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="class#22033:22623" expanded="false" />
-                <element signature="method#onServiceDisconnected#0;class#22033:22623" expanded="false" />
+                <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
+                <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+                <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+                <element signature="class#22037:22627" expanded="false" />
+                <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
                 <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="e#35352#37639#0" expanded="true" />
-                <element signature="e#37638#37639#0" expanded="true" />
+                <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
+                <element signature="e#35493#37780#0" expanded="true" />
+                <element signature="e#37779#37780#0" expanded="true" />
                 <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="class#customizedLongPressedListener#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
               </folding>
@@ -121,21 +110,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProjectConfig.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+      <file leaf-file-name="ImgFileManager.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="257" column="12" selection-start-line="257" selection-start-column="12" selection-end-line="257" selection-end-column="12" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
-                <element signature="e#9269#9445#0" expanded="true" />
-                <element signature="e#9444#9445#0" expanded="true" />
-                <element signature="e#10074#10075#0" expanded="true" />
-                <element signature="e#10124#10125#0" expanded="true" />
-                <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
-                <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="2.4010153">
+              <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -2233,10 +2213,10 @@
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/UnderlinesStyledFragmentActivity.java" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" />
       </list>
     </option>
@@ -2639,23 +2619,23 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.49574015" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17988668" sideWeight="0.38206786" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17988668" sideWeight="0.3796446" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2609047" sideWeight="0.5084388" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3555241" sideWeight="0.4434572" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4022663" sideWeight="0.33279485" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32719547" sideWeight="0.48949918" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3555241" sideWeight="0.5565428" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4022663" sideWeight="0.66720515" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.46607432" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24920128" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2609047" sideWeight="0.49156117" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.45799676" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.45476574" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2721,18 +2701,20 @@
           <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="613" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8207:9857" expanded="false" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
             <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#resetExCharsAndCharBoxes#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#13039#13081#0" expanded="false" />
             <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#CreateOrOpenLogFileTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22033:22623" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22033:22623" expanded="false" />
+            <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="class#22037:22627" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
             <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35352#37639#0" expanded="true" />
-            <element signature="e#37638#37639#0" expanded="true" />
+            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#35493#37780#0" expanded="true" />
+            <element signature="e#37779#37780#0" expanded="true" />
             <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#customizedLongPressedListener#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
           </folding>
@@ -2770,8 +2752,8 @@
             <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
             <element signature="e#9269#9445#0" expanded="true" />
             <element signature="e#9444#9445#0" expanded="true" />
-            <element signature="e#10074#10075#0" expanded="true" />
-            <element signature="e#10124#10125#0" expanded="true" />
+            <element signature="e#9881#9882#0" expanded="true" />
+            <element signature="e#9931#9932#0" expanded="true" />
             <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
             <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
           </folding>
@@ -2825,18 +2807,20 @@
           <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8207:9857" expanded="false" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
             <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#resetExCharsAndCharBoxes#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#13039#13081#0" expanded="false" />
             <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#CreateOrOpenLogFileTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22033:22623" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22033:22623" expanded="false" />
+            <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="class#22037:22627" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
             <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35352#37639#0" expanded="true" />
-            <element signature="e#37638#37639#0" expanded="true" />
+            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#35493#37780#0" expanded="true" />
+            <element signature="e#37779#37780#0" expanded="true" />
             <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#customizedLongPressedListener#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
           </folding>
@@ -3083,17 +3067,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
-          <folding>
-            <element signature="e#1440#1441#0" expanded="true" />
-            <element signature="e#1462#1463#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.64637">
@@ -3110,17 +3083,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.84777516">
-          <caret line="63" column="39" selection-start-line="63" selection-start-column="39" selection-end-line="63" selection-end-column="39" />
-          <folding>
-            <element signature="method#initArray#0;class#TxtFileManager#0" expanded="false" />
-            <element signature="method#finalize#0;class#TxtFileManager#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/UnderlinesStyledFragmentActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.618267">
@@ -3129,17 +3091,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="257" column="12" selection-start-line="257" selection-start-column="12" selection-end-line="257" selection-end-column="12" />
+          <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
+          <folding>
+            <element signature="e#1440#1441#0" expanded="true" />
+            <element signature="e#1462#1463#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.6903553">
+          <caret line="103" column="12" selection-start-line="103" selection-start-column="12" selection-end-line="103" selection-end-column="12" />
+          <folding>
+            <element signature="method#initArray#0;class#TxtFileManager#0" expanded="false" />
+            <element signature="method#finalize#0;class#TxtFileManager#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.222222">
+          <caret line="615" column="94" selection-start-line="615" selection-start-column="94" selection-end-line="615" selection-end-column="94" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
+            <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#13039#13081#0" expanded="false" />
+            <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="class#22037:22627" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
+            <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="e#35493#37780#0" expanded="true" />
+            <element signature="e#37779#37780#0" expanded="true" />
+            <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
+            <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="13.820164">
+          <caret line="267" column="0" selection-start-line="267" selection-start-column="0" selection-end-line="267" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
             <element signature="e#9269#9445#0" expanded="true" />
             <element signature="e#9444#9445#0" expanded="true" />
-            <element signature="e#10074#10075#0" expanded="true" />
-            <element signature="e#10124#10125#0" expanded="true" />
+            <element signature="e#9881#9882#0" expanded="true" />
+            <element signature="e#9931#9932#0" expanded="true" />
             <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
             <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
           </folding>
@@ -3148,33 +3158,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.587822">
-          <caret line="53" column="68" selection-start-line="53" selection-start-column="68" selection-end-line="53" selection-end-column="68" />
+        <state vertical-scroll-proportion="2.4010153">
+          <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.62">
-          <caret line="557" column="23" selection-start-line="557" selection-start-column="23" selection-end-line="557" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8207:9857" expanded="false" />
-            <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#resetExCharsAndCharBoxes#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#CreateOrOpenLogFileTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22033:22623" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22033:22623" expanded="false" />
-            <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35352#37639#0" expanded="true" />
-            <element signature="e#37638#37639#0" expanded="true" />
-            <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#customizedLongPressedListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
