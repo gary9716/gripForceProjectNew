@@ -15,7 +15,9 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -24,7 +26,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -61,9 +62,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	private final static String DEBUG_TAG = ExperimentActivity.class.getName();
 
-	private Context mContext = null;
-	private LayoutInflater mInflater = null;
-
+	/* View */
 	private ImageView mPenBtn;
 	private ImageView mEraserBtn;
 	private ImageView mCleanBtn;
@@ -83,69 +82,62 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private View mExperimentView = null;
 	private View mPreOrPostExperimentView = null;
 	private Button mPreOrPostNextPageButton = null;
-	private ImageView mExampleCharsGroupBG = null;
-
-
+	private ImageView mExampleCharsGroup = null;
 	private SpenSettingPenLayout mPenSettingView;
 	private SpenSettingEraserLayout mEraserSettingView;
 
-	private int mToolType = SpenSurfaceView.TOOL_SPEN;
+	private ImgFileManager genImgFileManager = null;
+	private ImgFileManager templateImgFileManager = null;
+	private TxtFileManager txtFileManager = null;
 
+	private Context mContext = null;
+	private LayoutInflater mInflater = null;
+	private Resources mRes;
+	private String packageName;
+	private int mToolType = SpenSurfaceView.TOOL_SPEN;
 	private int numCharBoxesInCol = 5;
 	private int numWritableCharBoxCols = 1;
 	private int numCharBoxesInAPage = numCharBoxesInCol * numWritableCharBoxCols;
 	private boolean isToCleanMode = false;
-	
 	private String[] mExCharNames;
 	private String[] mWritableCharBoxNames;
-
 	private SpenSettingPenInfo penInfo;
 	private SpenSettingEraserInfo eraserInfo;
-
-	private LocalBroadcastManager mLBCManager = null;
-	private Handler uiThreadHandler = null;
-
 	private SpenNoteDoc mSpenNoteDoc;
 	private SpenPageDoc[][] mSpenPageDocs = null;
 	private HashMap<SpenSurfaceView, SpenPageDoc> viewModelMap = null;
-
-	private Resources mRes;
-	private String packageName;
-
-	private ImgFileManager imgFileManager = null;
-	private TxtFileManager txtFileManager = null;
-
+	private LocalBroadcastManager mLBCManager = null;
+	private Handler uiThreadHandler = null;
 	private int oneLineSurfaceViewIndex = 1000;
 	private int charIndex = 0;
+	private int templateIndex = 0;
 	private int mGrade = 1; //default we use first grade
 	private int testingSetIndex = 0;
 	private ArrayList<Integer> testingSetGradesSeq = null;
-
 	private String mUserID = ProjectConfig.defaultUserID;
 	private int mUserGrade = 1;
 	private UIState preOrPostInterfaceState = UIState.preExperimentTrial;
 	private String mUserDominantHand = ProjectConfig.rightHand;
-
 	private HandlerThread mWorkerThread;
 	private Handler mWorkerThreadHandler;
-
 	private TaskRunnerAndDisplayProgressDialogAsyncTask asyncTaskStartedViaBroadcast = null;
-
 	private long startingTimestampInMillis = 0;
-	
 	private String[] cachedChars = null;
 	private Intent startBTClientServiceIntent = null;
-
 	private boolean isExperimentOver = false;
-
+	private boolean isOneLineSessionOver = false;
+	private boolean toChangeExperimentLayout = false;
+	private CharBoxesLayout layoutChangeTo = CharBoxesLayout.SeparateChars;
 	private CharBoxesLayout expLayoutSetting = CharBoxesLayout.SeparateChars;
-
 	private int additionalSetIndex = 0;
 	private String[] additionalSetName = null;
+    private Canvas bmpCanvas;
 
+	private int reqWidthInPx = 50;
+	private int reqHeightInPx = 100;
 
 	private void initThreadAndHandler() {
-		mWorkerThread = new HandlerThread("workerThreadForExperimentAct");
+		mWorkerThread = new HandlerThread(ExperimentActivity.class.getName() + System.currentTimeMillis());
 		mWorkerThread.start();
 		mWorkerThreadHandler = new Handler(mWorkerThread.getLooper());
 	}
@@ -154,10 +146,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(debug_tag, "Experiment started");
-		
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.set(2015, Calendar.JANUARY, 1);
-//		startingTimestampInMillis = calendar.getTimeInMillis();
 
 		startingTimestampInMillis = System.currentTimeMillis();
 
@@ -176,42 +164,16 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 //			numWritableCharBoxCols = 1;
 //		}
 
+		mContext = this;
+		uiThreadHandler = new Handler(getMainLooper());
+		packageName = getPackageName();
+		mRes = getResources();
+
 		numCharBoxesInCol = 5;
 		numWritableCharBoxCols = 1;
 
 		numCharBoxesInAPage = numCharBoxesInCol * numWritableCharBoxCols;
 		oneLineSurfaceViewIndex = numCharBoxesInAPage;
-
-		viewModelMap = new HashMap<SpenSurfaceView, SpenPageDoc>(numCharBoxesInAPage);
-		mSpenPageDocs = new SpenPageDoc[numWritableCharBoxCols][numCharBoxesInCol];
-		mExampleCharsTextView = new TextView[numWritableCharBoxCols][numCharBoxesInCol];
-		mWritableCharBoxContainers = new RelativeLayout[numWritableCharBoxCols][numCharBoxesInCol];
-		mCharBoxes = new SpenSurfaceView[numWritableCharBoxCols][numCharBoxesInCol];
-		
-		mExCharNames = new String[numCharBoxesInAPage];
-		for(int i = 0;i < numCharBoxesInAPage;i++) {
-			mExCharNames[i] = "ExChar" + (i + 1);
-		}
-		
-		mWritableCharBoxNames = new String[numCharBoxesInAPage];
-		for(int i = 0;i < numCharBoxesInAPage;i++) {
-			mWritableCharBoxNames[i] = "WritableChar" + (i + 1);
-		}
-		
-		mContext = this;
-		uiThreadHandler = new Handler(getMainLooper());
-
-		packageName = getPackageName();
-		mRes = getResources();
-
-		mLBCManager = LocalBroadcastManager.getInstance(mContext);
-		IntentFilter filter = new IntentFilter(Action_update_chars);
-		filter.addAction(BluetoothClientConnectService.Msg_update_info);
-		filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
-		filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
-		mLBCManager.registerReceiver(broadcastReceiver, filter);
-
-		additionalSetName = ProjectConfig.getAdditionalSetName();
 
 		initThreadAndHandler();
 
@@ -231,7 +193,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 		//this function call contain the execution of setContentView
 		//so it should be called before the async task which contains the display of a progress dialog
-		showPreExperimentView(mGrade);
+		showPreExperimentView();
 
 		/* preOrPostExperimentView */
 
@@ -260,7 +222,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 		@Override
 			public void onClick(View view) {
-				// TODO Auto-generated method stub
 
 				int id = view.getId();
 				isToCleanMode = false;
@@ -284,15 +245,17 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 							return;
 						}
 
+						if(toChangeExperimentLayout) {
+							changeExperimentLayout(layoutChangeTo);
+							toChangeExperimentLayout = false;
+						}
+
 						setContentView(mExperimentView); //switch to experiment view
 						
 						preOrPostInterfaceState = UIState.postExperimentTrial;
 					}
 					else if(preOrPostInterfaceState == UIState.postExperimentTrial) {
-						showPreExperimentView(mGrade);
-//						if(btClientService != null) {
-//							btClientService.setStoringDataEnabled(false);
-//						}
+						showPreExperimentView();
 						preOrPostInterfaceState = UIState.preExperimentTrial;
 					}
 				}
@@ -307,7 +270,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
 			String action = intent.getAction();
 			if(action.equals(Action_update_chars)) {
 				updateExChars(intent.getStringArrayExtra(Key_ExChars));
@@ -425,6 +387,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			charsUsedForUpdate = exChars;
 		}
 
+        //update chars according to charIndex and charsUsedForUpdate
 		setNextPageButtonClickable(false);
 		resetExCharsAndCharBoxes();
 		for(int i = 0;i < numWritableCharBoxCols;i++) {
@@ -440,125 +403,218 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	}
 
 	private void nextPage() { //next page during experiment
-		if(cachedChars == null) { //it should not happen
-			Toast.makeText(mContext, "換頁發生錯誤，請確認範例文字檔案已被正確讀取", Toast.LENGTH_LONG);
-			return;
-		}
+		int logIndex = 0;
+		int numLogsToLoadNow = 0;
+		//ArrayList<Runnable> taskList = new ArrayList<Runnable>();
 
-		//save images
-		int numImagesToSave = cachedChars.length - charIndex;
-		if(numImagesToSave > numCharBoxesInAPage) {
-			numImagesToSave = numCharBoxesInAPage;
-		}
-		int numImagesSaved = 0;
-		for(int i = 0;i < numWritableCharBoxCols;i++) {
-			for(int j = 0;j < numCharBoxesInCol && numImagesSaved < numImagesToSave;j++) {
-				captureSpenSurfaceView(i, j, ProjectConfig.getImgFileName(mUserID, mGrade, charIndex + numImagesSaved));
-				numImagesSaved++;
+		if(expLayoutSetting == CharBoxesLayout.SeparateChars) {
+			if (cachedChars == null) { //it should not happen
+				Toast.makeText(mContext, "換頁發生錯誤，請確認範例文字檔案已被正確讀取", Toast.LENGTH_LONG);
+				return;
 			}
-		}
 
-		//close no-needed files here
-		int numFilesToClose = cachedChars.length - charIndex;
-		if(numFilesToClose > numCharBoxesInAPage) {
-			numFilesToClose = numCharBoxesInAPage;
-		}
-		for(int i = 0;i < numFilesToClose;i++) {
-			txtFileManager.closeFile(i);
-		}
-		
-		charIndex = charIndex + numCharBoxesInAPage;
-		if(charIndex >= cachedChars.length) {
-			//one session has been done, transit to postExperimentView
-			showPostExperimentView();
-		}
-		else {
-			//change for next col of characters
-			int numLogsToLoadNow = cachedChars.length - charIndex;
-			if(numLogsToLoadNow > numCharBoxesInAPage) {
-				numLogsToLoadNow = numCharBoxesInAPage;
+			//save writing and textview images
+			int numImagesToSave = cachedChars.length - charIndex;
+			if (numImagesToSave > numCharBoxesInAPage) {
+				numImagesToSave = numCharBoxesInAPage;
 			}
-			
-			if(txtFileManager.rearrangeIndices(
-					Pair.create(Integer.valueOf(0), Integer.valueOf(numLogsToLoadNow)), 
-					Pair.create(Integer.valueOf(numCharBoxesInAPage), Integer.valueOf(numCharBoxesInAPage + numLogsToLoadNow))
-					)) {
-				//successfully use previous cached logs
-				//preload next logs set
-				int nextCharHeadIndex = charIndex + numCharBoxesInAPage;
-				if(nextCharHeadIndex < cachedChars.length) {
-					mWorkerThreadHandler.post(new CreateOrOpenLogFileTask(nextCharHeadIndex, numCharBoxesInAPage, cachedChars.length - nextCharHeadIndex));
+			int numImagesSaved = 0;
+			for (int i = 0; i < numWritableCharBoxCols; i++) {
+				for (int j = 0; j < numCharBoxesInCol && numImagesSaved < numImagesToSave; j++) {
+					captureSpenSurfaceView(mCharBoxes[i][j],
+							               ProjectConfig.getGeneratingImgFileName(
+                                                   ProjectConfig.writingImgPrefix,
+                                                   mUserID,
+                                                   currentDataSetName,
+                                                   charIndex + numImagesSaved));
+                    captureExampleTextView(mExampleCharsTextView[i][j],
+                                           ProjectConfig.getGeneratingImgFileName(
+                                                   ProjectConfig.textviewImgPrefix,
+                                                   mUserID,
+                                                   currentDataSetName,
+                                                   charIndex + numImagesSaved));
+
+					numImagesSaved++;
 				}
 			}
-			else {
-				//failed to use previous cached logs, then load logs and show progress in foreground
-				loadLogsAndShowProgressDialog(0, numLogsToLoadNow);
+
+			//close no-needed files here
+			int numFilesToClose = cachedChars.length - charIndex;
+			if (numFilesToClose > numCharBoxesInAPage) {
+				numFilesToClose = numCharBoxesInAPage;
+			}
+			for (int i = 0; i < numFilesToClose; i++) {
+				txtFileManager.closeFile(i);
+			}
+
+			charIndex = charIndex + numCharBoxesInAPage;
+			if (charIndex >= cachedChars.length) {
+				//one session has been done, transit to postExperimentView
+				showPostExperimentView();
+				return;
+			} else {
+				//change for next col of characters
+				logIndex = charIndex;
+				numLogsToLoadNow = cachedChars.length - charIndex;
+				if (numLogsToLoadNow > numCharBoxesInAPage) {
+					numLogsToLoadNow = numCharBoxesInAPage;
+				}
+
+				updateExChars(null);
+
+			}
+		}
+		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
+			txtFileManager.closeFile(0);
+			captureSpenSurfaceView(mOneLine, ProjectConfig.getGeneratingImgFileName(
+                    ProjectConfig.writingImgPrefix,
+                    mUserID,
+                    currentDataSetName,
+                    templateIndex));
+
+			logIndex = templateIndex;
+			numLogsToLoadNow = 1;
+
+			loadNextImageIntoExCharGroup();
+			if (isOneLineSessionOver) {
+				showPostExperimentView();
+				return;
+			}
+		}
+
+		(new TaskRunnerAndDisplayProgressDialogAsyncTask(
+				mContext,
+				new CreateOrOpenLogFileTask(
+                        ProjectConfig.tipForceLogPrefix,
+                        currentDataSetName,
+                        logIndex,
+                        firstCharBoxIndex,
+                        numLogsToLoadNow),
+                null)).execute();
+
+	}
+
+	private void loadNextImageIntoExCharGroup() {
+		String msg = templateImgFileManager.loadImageIntoImageViewWithSizeDependOnGradeAndIndex(
+				templateIndex,
+				mUserGrade,
+				mExampleCharsGroup,
+				reqWidthInPx,
+				reqHeightInPx);
+		if(msg.equals(ImgFileManager.endMsg) || msg.equals(ImgFileManager.errorMsg)) {
+			isOneLineSessionOver = true;
+		}
+		templateIndex++;
+	}
+
+	private void changeExCharFont(Typeface font) {
+		for(int i = 0;i < numWritableCharBoxCols;i++) {
+			for(int j = 0;j < numCharBoxesInCol;j++) {
+				mExampleCharsTextView[i][j].setTypeface(font);
 			}
 		}
 	}
 
+	private final int firstCharBoxIndex = 0;
+	private String currentDataSetName = null;
+
 	private void prepareForNextTestingSet() {
+		int logIndex = 0;
 		cachedChars = null;
-		charIndex = 0;
-		Runnable loadCharTask = null;
-		int numLogsToCreateOrOpen = 0;
+		currentDataSetName = null;
+
+		ArrayList<Runnable> taskList = new ArrayList<Runnable>();
 
 		if(testingSetIndex < mUserGrade) {
+			charIndex = 0;
+			logIndex = charIndex;
 			mGrade = testingSetGradesSeq.get(testingSetIndex);
-			loadCharTask = txtFileManager.getLoadChineseCharTask(mGrade);
-			numLogsToCreateOrOpen = numCharBoxesInAPage * 2;
+			taskList.add(txtFileManager.getLoadChineseCharTask(mGrade));
+			currentDataSetName = ProjectConfig.chineseCharDatasetName(mGrade);
 			testingSetIndex++;
 		}
 		else if(additionalSetName != null && additionalSetIndex < additionalSetName.length) {
-			loadCharTask = txtFileManager.getLoadCharTask(additionalSetName[additionalSetIndex]);
-			numLogsToCreateOrOpen = numCharBoxesInAPage * 2;
+			charIndex = 0;
+			logIndex = charIndex;
+			taskList.add(txtFileManager.getLoadCharTask(additionalSetName[additionalSetIndex]));
+			currentDataSetName = ProjectConfig.additionalDataSetName(additionalSetIndex);
+			Typeface font = ProjectConfig.getAdditionalSetFont();
+			if(font != null) {
+				changeExCharFont(font);
+			}
 			additionalSetIndex++;
 		}
+		else if(!isOneLineSessionOver && expLayoutSetting == CharBoxesLayout.SeparateChars){
+			//prepare to transit to one line layout
+			templateIndex = 0;
+			logIndex = templateIndex;
+			numCharBoxesInAPage = 1;
+			layoutChangeTo = CharBoxesLayout.OneLine;
+			toChangeExperimentLayout = true;
+			currentDataSetName = ProjectConfig.templateImageDataSetName();
+			loadNextImageIntoExCharGroup();
+            if(isOneLineSessionOver) {
+                prepareForNextTestingSet();
+                return;
+            }
+		}
 		else {
+			isExperimentOver = true;
 			return;
 		}
 
-		mWorkerThreadHandler.post(loadCharTask);
-		mWorkerThreadHandler.post(new CreateOrOpenLogFileTask(charIndex, 0, numLogsToCreateOrOpen));
-	}
-	
-	private void loadLogsAndShowProgressDialog(int charBoxIndex, int numLogsToLoad) {
+		taskList.add(new CreateOrOpenLogFileTask(
+				ProjectConfig.tipForceLogPrefix,
+				currentDataSetName,
+				logIndex,
+				firstCharBoxIndex,
+				numCharBoxesInAPage));
+
+		Runnable[] taskArray = new Runnable[taskList.size()];
+
 		(new TaskRunnerAndDisplayProgressDialogAsyncTask(
-				 mContext, 
-				 new CreateOrOpenLogFileTask(charIndex, charBoxIndex, numLogsToLoad), 
-				 null,
-				 "開啟Log檔案中",
-				 "請稍候")).execute();
-		return;
+				mContext,
+				taskList.toArray(taskArray),
+				null)).execute();
+
+//        for(Runnable task : taskList) {
+//            mWorkerThreadHandler.post(task);
+//        }
+
 	}
 
 	private class CreateOrOpenLogFileTask implements Runnable {
 
 		//charIndex is the order of certain char in Example Chars file
 		//charBoxIndex is the order of certain char on the experiment view
-		int mCharIndex;
+		int mLogIndex;
 		int mCharBoxIndex;
 		int mNumFilesToCreateOrOpen;
+		String mFileNamePrefix = null;
 
-		public CreateOrOpenLogFileTask(int charIndex, int charBoxIndex, int numFilesToCreateOrOpen) {
-			// TODO Auto-generated constructor stub
-			mCharIndex = charIndex;
+		public CreateOrOpenLogFileTask(String logType,
+									   String dataSetName,
+									   int logIndex,
+									   int charBoxIndex,
+									   int numFilesToCreateOrOpen) {
+
+			mFileNamePrefix = logType + "_" + mUserID + "_" + dataSetName + "_";
+			mLogIndex = logIndex;
 			mCharBoxIndex = charBoxIndex;
 			mNumFilesToCreateOrOpen = numFilesToCreateOrOpen;
 		}
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			int numLogsToLoad = mNumFilesToCreateOrOpen;
 			if(cachedChars != null) {
-				if(cachedChars.length - mCharIndex < numLogsToLoad) {
-					numLogsToLoad = cachedChars.length - mCharIndex;
+				if(cachedChars.length - mLogIndex < numLogsToLoad) {
+					numLogsToLoad = cachedChars.length - mLogIndex;
 				}
 			}
 			for(int i = 0;i < numLogsToLoad;i++) {
 				txtFileManager.createOrOpenLogFileSync(
-						ProjectConfig.getTipForceLogFileName(mUserID, mGrade, mCharIndex + i), 
+						mFileNamePrefix + (mLogIndex + i + 1),
 						mCharBoxIndex + i);
 			}
 		}
@@ -571,14 +627,14 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		prepareForNextTestingSet();
 	}
 
-	private void showPreExperimentView(int grade) {
+	private void showPreExperimentView() {
 		if(!isExperimentOver) {
 			mPreOrPostInfo.setText("即將開始評量，\n準備好後請按下一步");
 		}
 		else {
 			mPreOrPostNextPageButton.setVisibility(View.GONE);
 			mPreOrPostInfo.setText("評量到此結束，感謝你的參與");
-			endTheAppAfterCertainDuration(5000);
+			endTheAppAfterCertainDuration(7000);
 		}
 		setContentView(mPreOrPostExperimentView);
 	}
@@ -609,7 +665,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private final int charBoxOneLineHeight = inchToPixels(ProjectConfig.inchPerCM * 16.1f);
 	private final int charBoxWidth = charBoxHeight;
 
-	private void changeCharBoxesLayout(CharBoxesLayout layoutSetting) {
+	private void changeExperimentLayout(CharBoxesLayout layoutSetting) {
 		expLayoutSetting = layoutSetting;
 		//ViewGroup.LayoutParams writableCharBox_LP = mWritableCharBoxContainers[0][0].getLayoutParams();
 
@@ -629,16 +685,15 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		private LayoutInflater inflater;
 
 		public BeforeViewShownTask(Context context) {
-			// TODO Auto-generated constructor stub
 			mContext = context;
 			inflater = LayoutInflater.from(mContext);
 		}
 		
-		private void charboxesLayoutArrangement () {
+		private void experimentViewArrangement() {
 
 			otherUIContainer = new LinearLayout(mContext);
 			mOneLineContainer = new RelativeLayout(mContext);
-			mExampleCharsGroupBG = new ImageView(mContext);
+			mExampleCharsGroup = new ImageView(mContext);
 
 			charGroupsContainer = new LinearLayout(mContext);
 			charGroupsContainer.setOrientation(LinearLayout.VERTICAL);
@@ -674,6 +729,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 							charBoxHeight
 					);
 
+            bmpCanvas = new Canvas();
+
 			int charBoxMarginLeftOrRight = (int)mRes.getDimension(R.dimen.char_box_left_or_right_margin);
 			int charBoxMarginBottom = (int)mRes.getDimension(R.dimen.char_box_bottom_margin);
 			
@@ -683,7 +740,10 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			);
 
 			LinearLayout[] charGroups = new LinearLayout[numCharBoxesInAPage];
-			Typeface font = ProjectConfig.getDefaultFont();
+			Typeface font = ProjectConfig.getFont(ProjectConfig.ChineseDefault);
+			if(font == null) {
+				Toast.makeText(mContext, "無法讀取中文字形檔", Toast.LENGTH_LONG);
+			}
 
 			exampleCharBox_LP.bottomMargin = charBoxMarginBottom;
 
@@ -754,217 +814,251 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 
 
-			mExampleCharsGroupBG.setLayoutParams(imgRLP);
-			mExampleCharsGroupBG.setBackgroundColor(Color.WHITE);
+			mExampleCharsGroup.setLayoutParams(imgRLP);
+			mExampleCharsGroup.setBackgroundColor(Color.WHITE);
 
 			mOneLineContainer.setLayoutParams(oneLine_LP);
 			mOneLineContainer.setBackgroundColor(Color.WHITE);
 
 			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
 				otherUIContainer.addView(mOneLineContainer);
-				otherUIContainer.addView(mExampleCharsGroupBG);
+				otherUIContainer.addView(mExampleCharsGroup);
 				//otherUI_LP.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
 			}
 			else {
-				otherUIContainer.addView(mExampleCharsGroupBG);
+				otherUIContainer.addView(mExampleCharsGroup);
 				otherUIContainer.addView(mOneLineContainer);
 				//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
 			}
 
-			
+
 		}
 		
 		@Override
 		public void run() {
-				// TODO Auto-generated method stub
-				/* ExperimentView */
-//				final String dirPath = mContext.getFilesDir().getPath();
-//				Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.charbox_grid);
 
-				SharedPreferences userInfoPreference = mContext.getSharedPreferences(ProjectConfig.Key_Preference_UserInfo, Context.MODE_PRIVATE);
-				
-				if(userInfoPreference != null) {
-					mUserGrade = (int)userInfoPreference.getLong(ProjectConfig.Key_Preference_UserGrade, 1);
-					mUserDominantHand = userInfoPreference.getString(ProjectConfig.Key_Preference_UserDominantHand, ProjectConfig.rightHand);
-					mUserID = userInfoPreference.getString(ProjectConfig.Key_Preference_UserID, ProjectConfig.defaultUserID);
-					startBTClientServiceIntent = new Intent(mContext, BluetoothClientConnectService.class);
-					startBTClientServiceIntent.setAction(BluetoothClientConnectService.Action_start_receiving_data);
-					startBTClientServiceIntent.putExtra(BluetoothClientConnectService.DeviceAddrKey, userInfoPreference.getString(ProjectConfig.Key_Preference_CurrentSelectedBTAddress, null));
-					Log.d(debug_tag,"bt addr:" + userInfoPreference.getString(ProjectConfig.Key_Preference_CurrentSelectedBTAddress, null));
-					bindService(startBTClientServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+			//init variables
+			viewModelMap = new HashMap<SpenSurfaceView, SpenPageDoc>(numCharBoxesInAPage);
+			mSpenPageDocs = new SpenPageDoc[numWritableCharBoxCols][numCharBoxesInCol];
+			mExampleCharsTextView = new TextView[numWritableCharBoxCols][numCharBoxesInCol];
+			mWritableCharBoxContainers = new RelativeLayout[numWritableCharBoxCols][numCharBoxesInCol];
+			mCharBoxes = new SpenSurfaceView[numWritableCharBoxCols][numCharBoxesInCol];
+
+			mExCharNames = new String[numCharBoxesInAPage];
+			for(int i = 0;i < numCharBoxesInAPage;i++) {
+				mExCharNames[i] = "ExChar" + (i + 1);
+			}
+
+			mWritableCharBoxNames = new String[numCharBoxesInAPage];
+			for(int i = 0;i < numCharBoxesInAPage;i++) {
+				mWritableCharBoxNames[i] = "WritableChar" + (i + 1);
+			}
+
+			mLBCManager = LocalBroadcastManager.getInstance(mContext);
+			IntentFilter filter = new IntentFilter(Action_update_chars);
+			filter.addAction(BluetoothClientConnectService.Msg_update_info);
+			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
+			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
+			mLBCManager.registerReceiver(broadcastReceiver, filter);
+
+			additionalSetName = ProjectConfig.getAdditionalSetFileName();
+
+			SharedPreferences userInfoPreference = mContext.getSharedPreferences(ProjectConfig.Key_Preference_UserInfo, Context.MODE_PRIVATE);
+
+			if(userInfoPreference != null) {
+				mUserGrade = (int)userInfoPreference.getLong(ProjectConfig.Key_Preference_UserGrade, 1);
+				mUserDominantHand = userInfoPreference.getString(ProjectConfig.Key_Preference_UserDominantHand, ProjectConfig.rightHand);
+				mUserID = userInfoPreference.getString(ProjectConfig.Key_Preference_UserID, ProjectConfig.defaultUserID);
+				startBTClientServiceIntent = new Intent(mContext, BluetoothClientConnectService.class);
+				startBTClientServiceIntent.setAction(BluetoothClientConnectService.Action_start_receiving_data);
+				startBTClientServiceIntent.putExtra(BluetoothClientConnectService.DeviceAddrKey, userInfoPreference.getString(ProjectConfig.Key_Preference_CurrentSelectedBTAddress, null));
+				Log.d(debug_tag,"bt addr:" + userInfoPreference.getString(ProjectConfig.Key_Preference_CurrentSelectedBTAddress, null));
+				bindService(startBTClientServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+			}
+
+			FileDirInfo dirInfo = new FileDirInfo(FileType.GeneratingImage, ProjectConfig.getDirpathByID(mUserID), null);
+			genImgFileManager = new ImgFileManager(dirInfo, mContext);
+
+			//instead of using default path, use the path specified above(ProjectConfig.getDirpathByID(mUserID))
+			dirInfo.setFileType(FileType.Log, false);
+			//the rest of space is used for preloading
+			dirInfo.setOtherInfo(String.valueOf(numCharBoxesInCol * numWritableCharBoxCols * 2));
+			txtFileManager = new TxtFileManager(dirInfo, mContext);
+
+			dirInfo.setFileType(FileType.TemplateImage, true);
+			dirInfo.setOtherInfo(null);
+			templateImgFileManager = new ImgFileManager(dirInfo, mContext);
+
+			/* Experiment View */
+
+			mExperimentView = inflater.inflate(R.layout.activity_experiment_3, null);
+
+			mPenTipInfo = (TextView)mExperimentView.findViewById(R.id.penTipInfo);
+
+			// Set button Listener
+			mPenBtn = (ImageView) mExperimentView.findViewById(R.id.penBtn);
+			mPenBtn.setOnClickListener(mBtnOnClickListener);
+
+			mEraserBtn = (ImageView) mExperimentView.findViewById(R.id.eraserBtn);
+			mEraserBtn.setOnClickListener(mBtnOnClickListener);
+
+			mCleanBtn = (ImageView) mExperimentView.findViewById(R.id.cleanBtn);
+			mCleanBtn.setOnClickListener(mBtnOnClickListener);
+
+			mNextPageBtn = (RelativeLayout) mExperimentView.findViewById(R.id.nextPageBtn);
+			mNextPageBtn.setOnClickListener(mBtnOnClickListener);
+
+			//programmatically generate layout
+			experimentViewArrangement();
+
+			selectButton(mPenBtn);
+
+			mBTState = (TextView)mExperimentView.findViewById(R.id.text_bt_state);
+			mBTState.setText("未連接");
+
+			/* ExperimentView */
+
+			testingSetGradesSeq = ProjectConfig.getTestingGradeSequence(mUserGrade);
+			testingSetIndex = 0;
+			prepareForNextTestingSet();
+
+			//do SpenSetUp-Related Work at last
+			/* Spen Dependent Part Start */
+
+			// Initialize Spen
+			boolean isSpenFeatureEnabled = false;
+			Spen spenPackage = new Spen();
+			try {
+				spenPackage.initialize(mContext);
+				isSpenFeatureEnabled = spenPackage.isFeatureEnabled(Spen.DEVICE_PEN);
+			} catch (SsdkUnsupportedException e) {
+				if (SDKUtils.processUnsupportedException(ExperimentActivity.this, e) == true) {
+					return;
 				}
+			} catch (Exception e1) {
+				Toast.makeText(mContext, "Cannot initialize Spen.", Toast.LENGTH_SHORT).show();
+				e1.printStackTrace();
+				finish();
+			}
+			initSettingInfo2();
 
-				/* Experiment View */
-				mExperimentView = inflater.inflate(R.layout.activity_experiment_3, null);
+			// Get the dimension of the device screen.
+			Display display = getWindowManager().getDefaultDisplay();
+			Rect rect = new Rect();
+			display.getRectSize(rect);
+			// Create SpenNoteDoc
+			try {
+				mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
+			} catch (IOException e) {
+				Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+				finish();
+			} catch (Exception e) {
+				e.printStackTrace();
+				finish();
+			}
 
-				FileDirInfo dirInfo = new FileDirInfo(FileType.GeneratingImage, ProjectConfig.getDirpathByID(mUserID), null);
-				imgFileManager = new ImgFileManager(dirInfo, mContext);
-				dirInfo.setFileType(FileType.Log, false);
-				//the rest of space is used for preloading
-				dirInfo.setOtherInfo(String.valueOf(numCharBoxesInCol * numWritableCharBoxCols * 2));
-				txtFileManager = new TxtFileManager(dirInfo, mContext);
+			//String imgFileName = dirPath + "/charbox_bg.png";
+			//saveBitmapToFileCache(bitmap, imgFileName);
+			String imgFileName = null;
 
-				mPenTipInfo = (TextView)mExperimentView.findViewById(R.id.penTipInfo);
+			for(int i = 0;i < numWritableCharBoxCols;i++) {
+				for(int j = 0;j < numCharBoxesInCol;j++) {
+					// Add a Page to NoteDoc, get an instance, and set it to the member variable.
 
-				// Set a button
-				mPenBtn = (ImageView) mExperimentView.findViewById(R.id.penBtn);
-				mPenBtn.setOnClickListener(mBtnOnClickListener);
-
-				mEraserBtn = (ImageView) mExperimentView.findViewById(R.id.eraserBtn);
-				mEraserBtn.setOnClickListener(mBtnOnClickListener);
-
-				mCleanBtn = (ImageView) mExperimentView.findViewById(R.id.cleanBtn);
-				mCleanBtn.setOnClickListener(mBtnOnClickListener);
-
-				mNextPageBtn = (RelativeLayout) mExperimentView.findViewById(R.id.nextPageBtn);
-				mNextPageBtn.setOnClickListener(mBtnOnClickListener);
-				
-				charboxesLayoutArrangement();
-				
-				selectButton(mPenBtn);
-
-				mBTState = (TextView)mExperimentView.findViewById(R.id.text_bt_state);
-				mBTState.setText("未連接");
-				
-				/* ExperimentView */
-
-				testingSetGradesSeq = ProjectConfig.getTestingGradeSequence(mUserGrade);
-				testingSetIndex = 0;
-
-				prepareForNextTestingSet();
-
-				//do SpenSetUp-Related Work at last
-				/* Spen Dependent Part Start */
-
-				// Initialize Spen
-				boolean isSpenFeatureEnabled = false;
-				Spen spenPackage = new Spen();
-				try {
-					spenPackage.initialize(mContext);
-					isSpenFeatureEnabled = spenPackage.isFeatureEnabled(Spen.DEVICE_PEN);
-				} catch (SsdkUnsupportedException e) {
-					if (SDKUtils.processUnsupportedException(ExperimentActivity.this, e) == true) {
-						return;
+					if(imgFileName != null) {
+						//mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j, 0, imgFileName, SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
+						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
+						mSpenPageDocs[i][j].setBackgroundImage(imgFileName);
+						mSpenPageDocs[i][j].setBackgroundImageMode(SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
 					}
-				} catch (Exception e1) {
-					Toast.makeText(mContext, "Cannot initialize Spen.", Toast.LENGTH_SHORT).show();
-					e1.printStackTrace();
-					finish();
-				}
-				initSettingInfo2();
-
-				// Get the dimension of the device screen.
-				Display display = getWindowManager().getDefaultDisplay();
-				Rect rect = new Rect();
-				display.getRectSize(rect);
-				// Create SpenNoteDoc
-				try {
-					mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
-				} catch (IOException e) {
-					Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
-					e.printStackTrace();
-					finish();
-				} catch (Exception e) {
-					e.printStackTrace();
-					finish();
-				}
-				
-				//String imgFileName = dirPath + "/charbox_bg.png";
-				//saveBitmapToFileCache(bitmap, imgFileName);
-		        String imgFileName = null;
-				
-				for(int i = 0;i < numWritableCharBoxCols;i++) {
-					for(int j = 0;j < numCharBoxesInCol;j++) {
-						// Add a Page to NoteDoc, get an instance, and set it to the member variable.
-
-						if(imgFileName != null) {
-							//mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j, 0, imgFileName, SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
-							mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
-							mSpenPageDocs[i][j].setBackgroundImage(imgFileName);
-							mSpenPageDocs[i][j].setBackgroundImageMode(SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);	
-						}
-						else {
-							mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
-							mSpenPageDocs[i][j].setBackgroundColor(Color.WHITE);
-						}
-						mSpenPageDocs[i][j].clearHistory();
-
+					else {
+						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
+						mSpenPageDocs[i][j].setBackgroundColor(Color.WHITE);
 					}
+					mSpenPageDocs[i][j].clearHistory();
+
 				}
+			}
 
-				mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
-				mOneLinePageDoc.setBackgroundColor(Color.WHITE);
+			mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
+			mOneLinePageDoc.setBackgroundColor(Color.WHITE);
 
-				uiThreadHandler.post(new Runnable() {
+			//this part of work needs to be executed in Main thread (UI thread)
+			uiThreadHandler.post(new Runnable() {
 
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						//this part need to be run inside main thread otherwise it would crash.
-						//we still need around 2 sec to run this part of code
-						for (int i = 0; i < numWritableCharBoxCols; i++) {
-							for (int j = 0; j < numCharBoxesInCol; j++) {
-								mCharBoxes[i][j] = new SpenSurfaceView(mContext);
-								SpenSurfaceView surfaceView = mCharBoxes[i][j];
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					//this part need to be run inside main thread otherwise it would crash.
+					//we still need around 2 sec to run this part of code
+					for (int i = 0; i < numWritableCharBoxCols; i++) {
+						for (int j = 0; j < numCharBoxesInCol; j++) {
+							mCharBoxes[i][j] = new SpenSurfaceView(mContext);
+							SpenSurfaceView surfaceView = mCharBoxes[i][j];
 
-								//surfaceView.setClickable(true);
-								//to disable hover effect, just disable the hover effect in the system setting
-								surfaceView.setTouchListener(new CustomizedSpenTouchListener(i * numCharBoxesInCol + j, surfaceView));
-								surfaceView.setLongPressListener(new customizedLongPressedListener(surfaceView, i * numCharBoxesInCol + j));
-								surfaceView.setZoomable(false);
+							//surfaceView.setClickable(true);
+							//to disable hover effect, just disable the hover effect in the system setting
+							surfaceView.setTouchListener(new CustomizedSpenTouchListener(i * numCharBoxesInCol + j, surfaceView));
+							surfaceView.setLongPressListener(new customizedLongPressedListener(surfaceView, i * numCharBoxesInCol + j));
+							surfaceView.setZoomable(false);
 
-								//currently we disable finger's function. Maybe we could use it as eraser in the future.
-								surfaceView.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
-								surfaceView.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
-								surfaceView.setPenSettingInfo(penInfo);
-								surfaceView.setEraserSettingInfo(eraserInfo);
-								((RelativeLayout) mExperimentView.findViewWithTag(mWritableCharBoxNames[i * numCharBoxesInCol + j])).addView(surfaceView);
+							//currently we disable finger's function. Maybe we could use it as eraser in the future.
+							surfaceView.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
+							surfaceView.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
+							surfaceView.setPenSettingInfo(penInfo);
+							surfaceView.setEraserSettingInfo(eraserInfo);
+							((RelativeLayout) mExperimentView.findViewWithTag(mWritableCharBoxNames[i * numCharBoxesInCol + j])).addView(surfaceView);
 
-								surfaceView.setPageDoc(mSpenPageDocs[i][j], true);
-								viewModelMap.put(surfaceView, mSpenPageDocs[i][j]);
+							surfaceView.setPageDoc(mSpenPageDocs[i][j], true);
+							viewModelMap.put(surfaceView, mSpenPageDocs[i][j]);
 
-							}
 						}
-
-						mOneLine = new SpenSurfaceView(mContext);
-						mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
-						mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
-						mOneLine.setZoomable(false);
-
-						mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
-						mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
-						mOneLine.setPenSettingInfo(penInfo);
-						mOneLine.setEraserSettingInfo(eraserInfo);
-						mOneLineContainer.addView(mOneLine);
-
-						mOneLine.setPageDoc(mOneLinePageDoc, true);
-						viewModelMap.put(mOneLine, mOneLinePageDoc);
-
 					}
-				});
 
-				if (isSpenFeatureEnabled == false) {
-					mToolType = SpenSurfaceView.TOOL_FINGER;
-					Toast.makeText(mContext, "Device does not support Spen. \n You can draw stroke by finger",
-							Toast.LENGTH_SHORT).show();
+					mOneLine = new SpenSurfaceView(mContext);
+					mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
+					mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
+					mOneLine.setZoomable(false);
+
+					mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
+					mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
+					mOneLine.setPenSettingInfo(penInfo);
+					mOneLine.setEraserSettingInfo(eraserInfo);
+					mOneLineContainer.addView(mOneLine);
+
+					mOneLine.setPageDoc(mOneLinePageDoc, true);
+					viewModelMap.put(mOneLine, mOneLinePageDoc);
+
+                    changeExperimentLayout(CharBoxesLayout.SeparateChars);
 				}
+			});
 
-				/* Spen Dependent Part End */
+			if (isSpenFeatureEnabled == false) {
+				mToolType = SpenSurfaceView.TOOL_FINGER;
+				Toast.makeText(mContext, "Device does not support Spen. \n You can draw stroke by finger",
+						Toast.LENGTH_SHORT).show();
+			}
 
-				hideSystemBar();
-				mPreOrPostNextPageButton.setClickable(true);
+			/* Spen Dependent Part End */
+
+			hideSystemBar();
+			mPreOrPostNextPageButton.setClickable(true);
 
 		}
 
 	}
 
-	private void captureExampleTextView(int row, int col, String fileName) {
-
+	private void captureExampleTextView(TextView textView, String fileName) {
+        Bitmap bufferBMP = Bitmap.createBitmap(charBoxWidth, charBoxHeight, Bitmap.Config.ARGB_8888);
+        bmpCanvas.setBitmap(bufferBMP);
+        textView.draw(bmpCanvas);
+        genImgFileManager.saveBMP(bufferBMP, fileName, true);
 	}
 
-	private void captureSpenSurfaceView(int row, int col, String fileName) {	
-		Bitmap imgBitmap = mCharBoxes[row][col].captureCurrentView(true);
-		imgFileManager.saveBMP(imgBitmap, fileName);
+	private void captureSpenSurfaceView(SpenSurfaceView surfaceView, String fileName) {
+		Bitmap imgBitmap = surfaceView.captureCurrentView(true);
+		genImgFileManager.saveBMP(imgBitmap, fileName, true);
 	}
 
 	@Override

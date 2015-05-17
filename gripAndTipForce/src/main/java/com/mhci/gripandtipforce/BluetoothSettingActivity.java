@@ -89,7 +89,6 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 	
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.d(debug_tag, "onDestroy in " + BluetoothSettingActivity.class.getName());
 		if(mLBCManager != null) {
@@ -99,14 +98,12 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 	
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		Log.d(debug_tag, "onPause in " + BluetoothSettingActivity.class.getName());
 	}
 	
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		Log.d(debug_tag, "onStop in " + BluetoothSettingActivity.class.getName());
 	}
@@ -128,7 +125,6 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			// TODO Auto-generated method stub
 			//Log.d(debug_tag, "onTextChanged:" + s.toString() + ",start:" + start + ",before:" + before + ",count:" + count);
 			if(!canGoToNextPage()) {
 				setButtonsVisibility(false);
@@ -141,13 +137,11 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
-			// TODO Auto-generated method stub
 			//Log.d(debug_tag, "beforeTextChanged:" + s.toString() + ",start:" + start + ",count:" + count);
 		}
 		
 		@Override
 		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
 			//Log.d(debug_tag, "afterTextChanged:" + s.toString());
 		}
 	};
@@ -187,7 +181,6 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			if(v.getId() == R.id.button_select_from_bonded_devices) {
 				setViewUnclickable(v);
 				btManager.getBondedDevicesInfoAndUpdate();

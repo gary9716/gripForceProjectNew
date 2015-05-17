@@ -41,7 +41,7 @@ public class TxtFileManager extends FileManager{
 		
 		mContext = context;
 		mFileType = dirInfo.getFileType();
-		initThreadAndHandler();
+		//initThreadAndHandler(mFileType.name() + System.currentTimeMillis());
 		
 		mLBCManager = LocalBroadcastManager.getInstance(mContext);
 		
@@ -92,7 +92,6 @@ public class TxtFileManager extends FileManager{
 	}
 
 	public void appendLogWithNewlineSync(int arrayIndex, String data) {
-		// TODO Auto-generated method stub
 		BufferedWriter writer = null;
 		try {
 			writer = writerArray[arrayIndex];
@@ -109,7 +108,7 @@ public class TxtFileManager extends FileManager{
 		try {
 			writer.write(data);
 			writer.newLine();
-			//writerArray[arrayIndex].flush();
+            //writer.flush();
 		}
 		catch(Exception e) {
 			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
@@ -135,28 +134,7 @@ public class TxtFileManager extends FileManager{
 		writerArray[arrayIndex] = writer;
 		return true;
 	}
-	
-	//don't forget to close files before call this function
-	public boolean rearrangeIndices(Pair<Integer, Integer> toIndices,Pair<Integer, Integer> fromIndices) {
-		int[] toIndicesArray = new int[]{toIndices.first,toIndices.second};
-		int[] fromIndicesArray = new int[]{fromIndices.first,fromIndices.second};
-		int numFromIndicesToMap = fromIndicesArray[1] - fromIndicesArray[0];
-		if(toIndicesArray[1] - toIndicesArray[0] != numFromIndicesToMap) {
-			return false;
-		}
-		for(int i = 0;i < numFromIndicesToMap;i++) {
-			int toIndex = toIndicesArray[0] + i;
-			int fromIndex = fromIndicesArray[0] + i;
-			writerArray[toIndex] = writerArray[fromIndex];
-			writerArray[fromIndex] = null;
-			if(writerArray[toIndex] == null) {
-				return false;
-			}
-		}
-		return true;
-		
-	}
-	
+
 	public void closeFile(int arrayIndex) {
 		BufferedWriter writer = writerArray[arrayIndex];
 		if(writer != null) {
@@ -169,14 +147,6 @@ public class TxtFileManager extends FileManager{
 			}
 			writerArray[arrayIndex] = null;
 		}
-	}
-	
-	private HandlerThread mThread = null;
-	private Handler mThreadHandler = null;
-	private void initThreadAndHandler() {
-		mThread = new HandlerThread("FileWriterThread");
-		mThread.start();
-		mThreadHandler = new Handler(mThread.getLooper());
 	}
 
 	public Runnable getLoadChineseCharTask(int grade) {
@@ -193,7 +163,6 @@ public class TxtFileManager extends FileManager{
 		private String mFileName;
 		
 		public LoadCharsTask(int grade) {
-			// TODO Auto-generated constructor stub
 			mGrade = grade;
 		}
 
@@ -204,7 +173,6 @@ public class TxtFileManager extends FileManager{
 		
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			String[] result = null;
 			if(mGrade != -1) {
 				result = loadChineseCharsDependOnGrade(mGrade);
@@ -254,7 +222,7 @@ public class TxtFileManager extends FileManager{
 
 		File exampleCharsFile = null;
 		try {
-			exampleCharsFile = new File(ProjectConfig.exampleCharsFilesDirPath, ProjectConfig.exampleCharsFileName(grade));
+			exampleCharsFile = new File(ProjectConfig.exampleCharsFilesDirPath, ProjectConfig.chineseCharFileName(grade));
 		}
 		catch(Exception e) {
 			return null;
@@ -287,8 +255,6 @@ public class TxtFileManager extends FileManager{
 					break;
 				}
 
-				//maybe we'll need to load partially and send the chars to show on UI.
-				//we can use broadcast mechanism.
 			}
 		}
 		catch(Exception e) {
@@ -313,7 +279,6 @@ public class TxtFileManager extends FileManager{
 
 	@Override
 	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
 		super.finalize();
 		if(writerArray != null) {
 			for(int i = 0;i < writerArray.length;i++) {
@@ -322,6 +287,35 @@ public class TxtFileManager extends FileManager{
 		}
 	}
 
+
+//    //don't forget to close files before call this function
+//    public boolean rearrangeIndices(Pair<Integer, Integer> toIndices,Pair<Integer, Integer> fromIndices) {
+//        int[] toIndicesArray = new int[]{toIndices.first,toIndices.second};
+//        int[] fromIndicesArray = new int[]{fromIndices.first,fromIndices.second};
+//        int numFromIndicesToMap = fromIndicesArray[1] - fromIndicesArray[0];
+//        if(toIndicesArray[1] - toIndicesArray[0] != numFromIndicesToMap) {
+//            return false;
+//        }
+//        for(int i = 0;i < numFromIndicesToMap;i++) {
+//            int toIndex = toIndicesArray[0] + i;
+//            int fromIndex = fromIndicesArray[0] + i;
+//            writerArray[toIndex] = writerArray[fromIndex];
+//            writerArray[fromIndex] = null;
+//            if(writerArray[toIndex] == null) {
+//                return false;
+//            }
+//        }
+//        return true;
+//
+//    }
+
+//    private HandlerThread mThread = null;
+//    private Handler mThreadHandler = null;
+//    private void initThreadAndHandler(String threadName) {
+//        mThread = new HandlerThread(threadName);
+//        mThread.start();
+//        mThreadHandler = new Handler(mThread.getLooper());
+//    }
 
 	/*
 	public void appendLogWithNewlineAsync(int arrayIndex, String data) {

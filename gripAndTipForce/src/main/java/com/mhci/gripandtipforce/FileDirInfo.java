@@ -3,6 +3,7 @@ package com.mhci.gripandtipforce;
 import java.io.File;
 
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class FileDirInfo {
@@ -25,10 +26,13 @@ public class FileDirInfo {
 		
 		//test existence, if not existed, try to create the whole path
 		try {
+			//Log.d(debug_tag, "dir path:" + mDirPath);
 			File dir = new File(mDirPath);
 			if(!dir.exists()) {
+				//Log.d(debug_tag, "create dir");
 				dir.mkdirs(); //make the whole path, including parent directory
 			}
+			//Log.d(debug_tag, "done creating dir");
 		}
 		catch(Exception e) {
 			Log.d(debug_tag, e.getLocalizedMessage());

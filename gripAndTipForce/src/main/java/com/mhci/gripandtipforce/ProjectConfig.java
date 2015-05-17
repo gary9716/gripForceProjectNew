@@ -1,7 +1,10 @@
 package com.mhci.gripandtipforce;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import android.content.Context;
@@ -25,47 +28,28 @@ public class ProjectConfig {
 	public static final UUID UUIDForBT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	public static final String txtFileExtension = ".txt";
 	public static final String imgFileExtension = ".png";
-	
+
+	private static String[] defaultPaths = null;
 	public static String writableRootPath = null;
 	public final static String internalSDCardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 	private final static String externalStorageName = "extSdCard";
 	public final static String externalSDCardPath = tryToFindExtSDCardPath();
 	private static String defaultProjectDirPath = null;
+    //Dataset
+    private final static String[] DatasetName = new String[DataSetType.NumDataSetType.ordinal()];
 
-	public final static String exampleCharsDirName = "Example_Characters";
+    public final static String exampleCharsDirName = "Example_Characters";
 	public static String exampleCharsFilesDirPath = null;
-	public final static String gripForceLogPrefix = "GripForce_";
-	public final static String tipForceLogPrefix = "TipForce_";
-	public final static String restartMark = "restart_point";
+	public final static String gripForceLogPrefix = "GripForce";
+	public final static String tipForceLogPrefix = "TipForce";
+	public final static String writingImgPrefix = "WritingImage";
+    public final static String textviewImgPrefix = "ExCharImage";
+    public final static String restartMark = "restart_point";
+    //private static final String templateImgRegExp = "^" + DatasetName[DataSetType.TemplateImg.ordinal()] + ".*\\" + imgFileExtension;
+    //private static final String additionalSetRegExp =  DatasetName[DataSetType.AdditionalChar.ordinal()] + "(.*)";
 
-	public final static int numOfGrades = 6;
+    public final static int numOfGrades = 6;
 
-	private static String defaultFontName = "msjh.ttf";
-	private static Typeface defaultFont = null;
-
-	private final static String[] additionalSetName = {
-		"Unseen_Character"
-	};
-
-	private static String[] additionalSetPath = null;
-
-	private static String tryToFindExtSDCardPath() {
-		int lastIndex = internalSDCardPath.lastIndexOf('/');
-		String path = internalSDCardPath.substring(0, lastIndex + 1) + externalStorageName;
-		try {
-			File dir = new File(path);
-			if(dir.exists()) {
-				return path;
-			}
-			else {
-				return "/storage/" + externalStorageName;
-			}
-		}
-		catch(Exception e) {
-			return "/storage/" + externalStorageName;
-		}
-	}
-	
 	public static String getRootDirPath() {
 		if(writableRootPath == null) {
 			setWritableRootPath(null);
@@ -87,8 +71,8 @@ public class ProjectConfig {
 		if(!isDirPathWritable(defaultPathToUse)) {
 			if(externalSDCardPath.equals(defaultPathToUse)) {
 				Toast.makeText(context, "SD卡無法使用,請確認是否正確安裝", Toast.LENGTH_LONG).show();
-			}
-			defaultPathToUse = internalSDCardPath;
+                defaultPathToUse = internalSDCardPath;
+            }
 			if(!isDirPathWritable(defaultPathToUse)) {
 				Log.d(debug_tag, "both storage are not available");
 				if(context != null) {
@@ -111,10 +95,22 @@ public class ProjectConfig {
 		}
 	}
 
-	public static String exampleCharsFileName(int grade) {
-		return "Grade_" + grade + "_Characters" + txtFileExtension;
+	public static String chineseCharFileName(int grade) {
+		return chineseCharDatasetName(grade) + txtFileExtension;
 	}
-	
+
+	public static String chineseCharDatasetName(int grade) {
+		return DatasetName[DataSetType.ChineseChar.ordinal()] + "_Grade" + grade;
+	}
+
+	public static String additionalDataSetName(int setNum) {
+		return DatasetName[DataSetType.AdditionalChar.ordinal()] + "_" + (setNum + 1);
+	}
+
+	public static String templateImageDataSetName() {
+		return DatasetName[DataSetType.TemplateImg.ordinal()];
+	}
+
 	//SharePreference Keys
 	
 	//BT Settings
@@ -136,16 +132,22 @@ public class ProjectConfig {
 	public static final String Key_Preference_ExperimentSetting = "expSetting";
 	public static final String Key_Preference_TestingLayout = "TestingLayout";
 
+	//Fonts
+	public final static String ChineseDefault = "chinese.ttf";
+	public final static String AdditionalSetDefault = "addition.ttf";
+	public static HashMap<String, Typeface> fontMap = null;
 
-	public static void changeDefaultFont(String fontName) {
-		defaultFontName = fontName;
+	public static String dataSetName(DataSetType dataSetType) {
+		return DatasetName[dataSetType.ordinal()];
 	}
 
-	public static Typeface getDefaultFont() {
-		if(defaultFont == null) {
-			defaultFont = getFont(defaultFontName);
+	public static Typeface getFont(String fontType) {
+		Typeface storedFont = fontMap.get(fontType);
+		if(storedFont == null) {
+			storedFont = getFontFromFile(fontType);
+			fontMap.put(fontType, storedFont);
 		}
-		return defaultFont;
+		return storedFont;
 	}
 
 	public static boolean isInitDone = false;
@@ -162,6 +164,11 @@ public class ProjectConfig {
 		//SeparateChars = res.getString(R.string.SeparateChars);
 		setWritableRootPath(context);
 		FileDirInfo._defaultDirPath = setDefaultDirPaths(context);
+		fontMap = new HashMap<String, Typeface>();
+		DatasetName[DataSetType.ChineseChar.ordinal()] = "ChineseCharacters";
+		DatasetName[DataSetType.AdditionalChar.ordinal()] = "AdditionalCharacters";
+		DatasetName[DataSetType.TemplateImg.ordinal()] = "TemplateImage";
+
 		isInitDone = true;
 
 	}
@@ -191,8 +198,12 @@ public class ProjectConfig {
 		return testingGrades;
 	}
 
-	public static String[] getAdditionalSetName() {
-		return additionalSetName;
+	public static String[] getAdditionalSetFileName() {
+		return (new File(exampleCharsFilesDirPath)).list(additionalSetNameFilter);
+	}
+
+	public static Typeface getAdditionalSetFont() {
+		return getFont(AdditionalSetDefault);
 	}
 
 //	public static String[] getAdditionalCharSet() {
@@ -208,32 +219,64 @@ public class ProjectConfig {
 //		return additionalSetPath;
 //	}
 
+
 	private static String[] setDefaultDirPaths(Context context) {
-		String[] defaultPaths = new String[FileType.numFileType.ordinal()];
+		defaultPaths = new String[FileType.numFileType.ordinal()];
 		String rootPath = getRootDirPath();
 		defaultProjectDirPath = rootPath + "/" + projectName;
-		defaultPaths[FileType.Log.ordinal()] = defaultProjectDirPath + "/Logs";
-		defaultPaths[FileType.PersonalInfo.ordinal()] = defaultProjectDirPath + "/PersonalInformation";
-		defaultPaths[FileType.GeneratingImage.ordinal()] = defaultProjectDirPath + "/GeneratingImages";
+		//defaultPaths[FileType.Log.ordinal()] = defaultProjectDirPath + "/Logs";
+		//defaultPaths[FileType.PersonalInfo.ordinal()] = defaultProjectDirPath + "/PersonalInformation";
+		//defaultPaths[FileType.GeneratingImage.ordinal()] = defaultProjectDirPath + "/GeneratingImages";
 		defaultPaths[FileType.ExampleChars.ordinal()] = defaultProjectDirPath + "/" + exampleCharsDirName;
-		defaultPaths[FileType.TemplateImage.ordinal()] = defaultProjectDirPath + "/TemplateImages";
+		defaultPaths[FileType.TemplateImage.ordinal()] = defaultProjectDirPath + "/Template_Images";
 		exampleCharsFilesDirPath = defaultPaths[FileType.ExampleChars.ordinal()];
-		checkDirExistence(defaultPaths,context);
+		checkDirExistence(defaultPaths, context);
 		
 		return defaultPaths;
 	}
 
-
-	public static String getImgFileName(String userID,int grade,int charIndex) {
-		return userID + "_" + grade + "_" + (charIndex + 1) + imgFileExtension;
+	public static String getGeneratingImgFileName(String prefix, String userID, String dataSetName, int charIndex) {
+		StringBuffer strBuffer = new StringBuffer();
+		strBuffer.append(prefix);
+		strBuffer.append('_');
+		strBuffer.append(userID);
+		strBuffer.append('_');
+		strBuffer.append(dataSetName);
+		strBuffer.append('_');
+		strBuffer.append(charIndex + 1);
+		strBuffer.append(imgFileExtension);
+		return strBuffer.toString();
 	}
 
-	public static String getTipForceLogFileName(String userID, int grade, int charIndex) {
-		return tipForceLogPrefix + userID + "_" + grade + "_" + (charIndex + 1) + txtFileExtension;
+	public static String getTemplateImagesDirPath(int grade) {
+		return defaultPaths[FileType.TemplateImage.ordinal()] + "/Grade" + grade;
 	}
+
+    public static final FileFilter templateImageNameFilter = new FileFilter() {
+		@Override
+		public boolean accept(File file) {
+            return file.getName().startsWith(DatasetName[DataSetType.TemplateImg.ordinal()]);
+		}
+	};
+
+	public static final FilenameFilter additionalSetNameFilter = new FilenameFilter() {
+		@Override
+		public boolean accept(File dir, String fileName) {
+			return fileName.startsWith(DatasetName[DataSetType.AdditionalChar.ordinal()]);
+		}
+	};
+
+//	public static String getTipForceLogFileName(String userID, int grade, int charIndex) {
+//		return tipForceLogPrefix + userID + "_" + grade + "_" + (charIndex + 1) + txtFileExtension;
+//	}
 	
 	public static String getGripForceLogFileName(String userID) {
-		return gripForceLogPrefix + userID + txtFileExtension;
+		StringBuffer strBuffer = new StringBuffer();
+		strBuffer.append(gripForceLogPrefix);
+		strBuffer.append('_');
+		strBuffer.append(userID);
+		strBuffer.append(txtFileExtension);
+		return strBuffer.toString();
 	}
 	
 	public static String getPersonalInfoFileName(String userID) {
@@ -241,7 +284,7 @@ public class ProjectConfig {
 	}
 	
 	public static String getDirpathByID(String userID) {
-		return getRootDirPath() + "/" + projectName + "/" + userID;
+		return defaultProjectDirPath + "/" + userID;
 	}
 
 	public static String getProjectDirPath() {
@@ -299,6 +342,9 @@ public class ProjectConfig {
 	private static void checkDirExistence(String[] defaultPaths,Context context) {
 		for(String path : defaultPaths) {
 			try {
+                if(path == null) {
+                    continue;
+                }
 				File dir = new File(path);
 				if(!dir.exists()) {
 					if(!dir.mkdirs()) {
@@ -313,14 +359,31 @@ public class ProjectConfig {
 		}
 	}
 
-	public static Typeface getFont(String fontName) {
+	public static Typeface getFontFromFile(String fontName) {
 		try {
-			File fontFile = new File(ProjectConfig.internalSDCardPath + "/" + ProjectConfig.projectName + "/" + fontName);
+			File fontFile = new File(ProjectConfig.externalSDCardPath + "/" + ProjectConfig.projectName + "/Fonts/" + fontName);
 			return Typeface.createFromFile(fontFile);
 		}
 		catch(Exception e) {
 			Log.d("typeface", e.getLocalizedMessage());
 			return null;
+		}
+	}
+
+	private static String tryToFindExtSDCardPath() {
+		int lastIndex = internalSDCardPath.lastIndexOf('/');
+		String path = internalSDCardPath.substring(0, lastIndex + 1) + externalStorageName;
+		try {
+			File dir = new File(path);
+			if(dir.exists()) {
+				return path;
+			}
+			else {
+				return "/storage/" + externalStorageName;
+			}
+		}
+		catch(Exception e) {
+			return "/storage/" + externalStorageName;
 		}
 	}
 

@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -23,35 +24,11 @@ public class BluetoothManager extends BroadcastReceiver{
 	private LinkedList<BroadcastReceiver> registeredReceivers = null;
 	private ArrayAdapter<String> mDataAdapter = null;
 	private boolean mOriginalBTStateEnabled = false;
-	
-	
-	/*
-	private static BluetoothManager instance = null;
-	public static BluetoothManager getInstance(Context context, BroadcastReceiver customizedReceiver, ArrayAdapter<String> dataAdapter) {
-		if(instance == null) {
-			synchronized (BluetoothManager.class) {
-				if(instance == null) {
-					instance = new BluetoothManager(context, customizedReceiver, dataAdapter);
-				}
-			}
-		}
-		
-		if(context != null) {
-			instance.mContext = context;
-		}
-		if(customizedReceiver != null) {
-			instance.setBroadcastReceiver(customizedReceiver);
-		}
-		if(dataAdapter != null) {
-			instance.mDataAdapter = dataAdapter;
-		}
-		
-		return instance;
-	}
-	*/
-	
+	private LocalBroadcastManager lbcManager;
+
 	public BluetoothManager(Context context, BroadcastReceiver customizedReceiver, ArrayAdapter<String> dataAdapter) {
 		mContext = context;
+		lbcManager = LocalBroadcastManager.getInstance(context);
 		mBTAdapter = BluetoothAdapter.getDefaultAdapter();
 		if(mBTAdapter == null) {
 			Toast.makeText(mContext, "your device doesn't support bluetooth. Bluetooth Feature turned off", Toast.LENGTH_LONG).show();
@@ -85,7 +62,7 @@ public class BluetoothManager extends BroadcastReceiver{
 		super.finalize();
 		if(registeredReceivers != null) {
 			for(BroadcastReceiver receiver : registeredReceivers) {
-				mContext.unregisterReceiver(receiver);
+				lbcManager.unregisterReceiver(receiver);
 			}
 		}
 		
@@ -107,11 +84,12 @@ public class BluetoothManager extends BroadcastReceiver{
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 		
 		// Don't forget to unregister during onDestroy	
-		mContext.registerReceiver(this, filter);
+
+		lbcManager.registerReceiver(this, filter);
 		registeredReceivers.add(this);
 		
 		if(customizedReceiver != null) {
-			mContext.registerReceiver(customizedReceiver, filter); 
+			lbcManager.registerReceiver(customizedReceiver, filter);
 			registeredReceivers.add(customizedReceiver);
 		}
 		
@@ -220,4 +198,29 @@ public class BluetoothManager extends BroadcastReceiver{
 		return mBTAdapter.isEnabled();
 	}
 
+
+	/*
+	private static BluetoothManager instance = null;
+	public static BluetoothManager getInstance(Context context, BroadcastReceiver customizedReceiver, ArrayAdapter<String> dataAdapter) {
+		if(instance == null) {
+			synchronized (BluetoothManager.class) {
+				if(instance == null) {
+					instance = new BluetoothManager(context, customizedReceiver, dataAdapter);
+				}
+			}
+		}
+
+		if(context != null) {
+			instance.mContext = context;
+		}
+		if(customizedReceiver != null) {
+			instance.setBroadcastReceiver(customizedReceiver);
+		}
+		if(dataAdapter != null) {
+			instance.mDataAdapter = dataAdapter;
+		}
+
+		return instance;
+	}
+	*/
 }

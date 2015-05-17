@@ -9,27 +9,32 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 	public final static String stopAsyncTask = TaskRunnerAndDisplayProgressDialogAsyncTask.class.getName() + ".stop";
 	public final static String Key_title = "Title";
 	public final static String Key_msg = "Msg";
-	
+
 	private Context mContext = null;
 	private ProgressDialog progressDialog;
-	private Runnable mTaskToRunInBG;
+	private Runnable[] mBGTaskList;
 	private Runnable mPostTaskAfterBGTask;
 	private final static String defaultDialogTitle = "處理中...";
 	private final static String defaultDialogMessage = "系統忙碌中,請稍候";
 	private String userDefinedTitle = null;
 	private String userDefinedMsg = null;
-	
-	public TaskRunnerAndDisplayProgressDialogAsyncTask(Context context,Runnable taskToRunInBG,Runnable postTaskAfterBGTask) {
-		// TODO Auto-generated constructor stub
+
+	public TaskRunnerAndDisplayProgressDialogAsyncTask(Context context,Runnable[] bgTaskList,Runnable postTaskAfterBGTask) {
 		mContext = context;
-		mTaskToRunInBG = taskToRunInBG;
+		mBGTaskList = bgTaskList;
+		mPostTaskAfterBGTask = postTaskAfterBGTask;
+	}
+
+	public TaskRunnerAndDisplayProgressDialogAsyncTask(Context context,Runnable taskToRunInBG,Runnable postTaskAfterBGTask) {
+		mContext = context;
+		mBGTaskList = new Runnable[]{taskToRunInBG};
 		mPostTaskAfterBGTask = postTaskAfterBGTask;	
 	}
 	
 	public TaskRunnerAndDisplayProgressDialogAsyncTask(Context context,Runnable taskToRunInBG,Runnable postTaskAfterBGTask,String title,String msg) {
 		// TODO Auto-generated constructor stub
 		mContext = context;
-		mTaskToRunInBG = taskToRunInBG;
+		mBGTaskList = new Runnable[]{taskToRunInBG};
 		mPostTaskAfterBGTask = postTaskAfterBGTask;
 		userDefinedMsg = msg;
 		userDefinedTitle = title;
@@ -56,15 +61,21 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 
 		//this should be called after content view set
 		//so this line should be called after "setContentView" this function
-		progressDialog = ProgressDialog.show(mContext,title,msg, true, false); //indeterminate , cancellable
-		
+		try {
+            progressDialog = ProgressDialog.show(mContext, title, msg, true, false); //indeterminate , cancellable
+        }
+        catch(Exception e) {
+            progressDialog = null;
+        }
 	}
 	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		// TODO Auto-generated method stub
-		if(mTaskToRunInBG != null) {
-			mTaskToRunInBG.run();
+		if(mBGTaskList != null) {
+			for(Runnable task : mBGTaskList) {
+				task.run();
+			}
 		}
 		return null;
 	}
@@ -76,8 +87,9 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 		if(mPostTaskAfterBGTask != null) {
 			mPostTaskAfterBGTask.run();
 		}
-		progressDialog.dismiss();
-		
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
 	}
 
 }

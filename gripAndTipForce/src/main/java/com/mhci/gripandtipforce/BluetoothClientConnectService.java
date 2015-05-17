@@ -172,24 +172,7 @@ public class BluetoothClientConnectService extends Service{
 		}
 	}
 	
-	private void createOrOpenBTDataLog() {
-		mWorkHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-				Intent action = new Intent(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
-				action.putExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_title, "開啟Log檔案");
-				action.putExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_msg, "正在開啟藍芽Log檔案,請稍候");
-				mLBCManager.sendBroadcast(action);
-				
-				txtFileManager.createOrOpenLogFileSync(ProjectConfig.getGripForceLogFileName(mUserID), logFileIndex);
-				
-				action.setAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
-				mLBCManager.sendBroadcast(action);
-			}
-		});
-	}
+
 	
 	private void initThreadAndHandler() {
 		mWorkerThread = new HandlerThread("BTClientWorkerThread");
@@ -395,5 +378,24 @@ public class BluetoothClientConnectService extends Service{
 			}
 		}
 	};
-	
-};
+
+	//	private void createOrOpenBTDataLog() {
+//		mWorkHandler.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//
+//				Intent action = new Intent(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
+//				action.putExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_title, "開啟Log檔案");
+//				action.putExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_msg, "正在開啟藍芽Log檔案,請稍候");
+//				mLBCManager.sendBroadcast(action);
+//
+//				txtFileManager.createOrOpenLogFileSync(ProjectConfig.getGripForceLogFileName(mUserID), logFileIndex);
+//
+//				action.setAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
+//				mLBCManager.sendBroadcast(action);
+//			}
+//		});
+//	}
+
+}

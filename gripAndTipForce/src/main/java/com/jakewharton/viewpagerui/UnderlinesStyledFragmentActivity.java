@@ -17,6 +17,7 @@ public class UnderlinesStyledFragmentActivity extends CustomizedBaseFragmentActi
         //code for close the app and clean up all activities
         if(getIntent().getBooleanExtra("EXIT", false)) {
             showSystemBar();
+            ProjectConfig.isInitDone = false;
             finish();
             return;
         }
