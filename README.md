@@ -8,7 +8,7 @@
 
 * the app will try to search the Removable SD Card first. if not existed, it will use System SD Card.
 
-# Data Naming and Format:
+# Output Data Naming and Format:
 <ol> <li> For Grip Force Logs: </li>
 
 * Naming: GripForce_{UserID}.txt<br/>
@@ -23,7 +23,7 @@
 
 <li> For Tip Force Logs: </li>
 
-* Naming: TipForce_{UserID}_{Grade}_{The order of a character in a file}.txt<br/>
+* Naming: TipForce_{UserID}_{DataSetName}_{Order}.txt<br/>
 
 * Format:{timestamp in milliseconds since experiment view loaded},{x coordinate},{y coordinate},{samsung note compatiable pen tip force}<br/>
 
@@ -31,7 +31,13 @@
 
 <li> Handwriting Images: </li>
 
-* Naming: {UserID}_{Grade}_{The order of a character in a file}.png<br/>
+* Naming: WritingImage_{UserID}_{DataSetName}_{Order}.png<br/>
+
+* Path: GripForce/{UserID}<br/>
+
+<li> Single-Word Template Images: </li>
+
+* Naming: ExCharImage_{UserID}_{DataSetName}_{Order}.png<br/>
 
 * Path: GripForce/{UserID}<br/>
 
@@ -39,11 +45,11 @@
 
 * Naming: {UserID}.txt<br/>
 
-* Path: GripForce/PersonalInformation<br/>
+* Path: GripForce/{UserID}<br/>
 
 </ol>
 
-# Testing Chinese Characters:
+# Input Chinese Characters:
 
 * Naming: ChineseCharacters_Grade{Number}.txt
 
@@ -56,7 +62,7 @@
 * Path: GripForce/Example_Characters
 
 
-# Testing Additional Sets:
+# Input Additional Sets:
 
 * Naming: AdditionalCharacters_{Number}.txt
 
@@ -67,7 +73,7 @@
 * Path: GripForce/Example_Characters
 
 
-# Testing Template Images:
+# Input Template Images:
 
 * Naming: TemplateImage_{Number}.png
 
