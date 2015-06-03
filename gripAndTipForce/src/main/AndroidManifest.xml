@@ -54,7 +54,9 @@
         
         <service
        		android:name="com.mhci.gripandtipforce.BluetoothClientConnectService"/>
-        
+
+        <activity android:name="app.akexorcist.bluetoothspp.DeviceList" />
+
     </application>
 
 </manifest>

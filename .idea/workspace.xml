@@ -36,15 +36,18 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Unnamed-2" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43803133-d5c6-4e83-8b25-e53a606044be" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" afterPath="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build.gradle" afterPath="$PROJECT_DIR$/library/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="gripForceProject.iws" />
@@ -85,23 +88,19 @@
       <file leaf-file-name="ExperimentActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.222222">
-              <caret line="615" column="94" selection-start-line="615" selection-start-column="94" selection-end-line="615" selection-end-column="94" />
+            <state vertical-scroll-proportion="-6.16">
+              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
+                <element signature="method#setSPenToolActionWithAllCanvases#0;class#7592:9242" expanded="false" />
                 <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="e#13039#13081#0" expanded="false" />
+                <element signature="e#12456#12498#0" expanded="false" />
                 <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="class#22037:22627" expanded="false" />
-                <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
+                <element signature="class#21388:21978" expanded="false" />
+                <element signature="method#onServiceDisconnected#0;class#21388:21978" expanded="false" />
                 <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
-                <element signature="e#35493#37780#0" expanded="true" />
-                <element signature="e#37779#37780#0" expanded="true" />
                 <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
                 <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
@@ -110,11 +109,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImgFileManager.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java">
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.4010153">
-              <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+            <state vertical-scroll-proportion="2.8053691">
+              <caret line="57" column="49" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProjectConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+              <folding>
+                <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
+                <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
+                <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BluetoothManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="165" column="38" selection-start-line="165" selection-start-column="38" selection-end-line="165" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#6541#6542#0" expanded="false" />
+                <element signature="e#6587#6588#0" expanded="false" />
+                <element signature="e#6738#6739#0" expanded="false" />
+                <element signature="e#6774#6775#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BluetoothClientConnectService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="300" column="79" selection-start-line="300" selection-start-column="76" selection-end-line="300" selection-end-column="79" />
               <folding />
             </state>
           </provider>
@@ -126,8 +165,17 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
               <folding>
-                <element signature="e#1440#1441#0" expanded="true" />
-                <element signature="e#1462#1463#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#1248#1249#0" expanded="false" />
+                <element signature="e#1273#1274#0" expanded="false" />
+                <element signature="e#1321#1322#0" expanded="false" />
+                <element signature="e#1350#1351#0" expanded="false" />
+                <element signature="e#1385#1386#0" expanded="false" />
+                <element signature="e#1408#1409#0" expanded="false" />
+                <element signature="e#1440#1441#0" expanded="false" />
+                <element signature="e#1462#1463#0" expanded="false" />
+                <element signature="e#1496#1497#0" expanded="false" />
+                <element signature="e#1520#1521#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -551,6 +599,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="preReleaseUnitTestBuild" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.akexorcist:bluetoothspp:1.0.0" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComAkexorcistBluetoothspp100Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Prepare com.android.support:support-v4:22.1.1" />
@@ -1134,6 +1187,11 @@
                 <option name="name" value="preReleaseUnitTestBuild" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.akexorcist:bluetoothspp:1.0.0" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/gripAndTipForce" />
+                <option name="name" value="prepareComAkexorcistBluetoothspp100Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Prepare com.android.support:support-v4:22.1.1" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/gripAndTipForce" />
                 <option name="name" value="prepareComAndroidSupportSupportV42211Library" />
@@ -1673,6 +1731,11 @@
                 <option name="name" value="preReleaseUnitTestBuild" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.akexorcist:bluetoothspp:1.0.0" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/library" />
+                <option name="name" value="prepareComAkexorcistBluetoothspp100Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Prepare com.android.support:support-v4:22.1.1" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/library" />
                 <option name="name" value="prepareComAndroidSupportSupportV42211Library" />
@@ -1782,7 +1845,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="5722115652000" />
+        <entry key="$PROJECT_DIR$" value="5724501863000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -2115,6 +2178,7 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.3/lombok-ast-0.2.3.jar" />
                             <option value="$PROJECT_DIR$/../../android-sdk-macosx/extras/android/m2repository/com/android/support/support-v4/22.1.1/support-v4-22.1.1.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.akexorcist/bluetoothspp/1.0.0/5ec86d8a5897b0645de55c3d7cde02345afc3d76/bluetoothspp-1.0.0.aar" />
                             <option value="$PROJECT_DIR$/../../android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar" />
                           </list>
                         </option>
@@ -2198,7 +2262,6 @@
       <list>
         <option value="$PROJECT_DIR$/library/build/intermediates/manifests/tmp/manifestMerger6537092636450517229.xml" />
         <option value="$PROJECT_DIR$/library/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/res/values-v21/values.xml" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/ViewPagerFragment.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/fragment_input_data.xml" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/CharBoxesLayout.java" />
@@ -2208,15 +2271,16 @@
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileType.java" />
         <option value="$PROJECT_DIR$/library/build.gradle" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/DataSetType.java" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TaskRunnerAndDisplayProgressDialogAsyncTask.java" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" />
-        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/UnderlinesStyledFragmentActivity.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileDirInfo.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/TxtFileManager.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java" />
+        <option value="$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java" />
       </list>
     </option>
@@ -2261,10 +2325,44 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="ProjectPane" />
-      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripAndTipForce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2279,8 +2377,50 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="library" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="viewpagerindicator" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="gripAndTipForce" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripForceProject" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gripAndTipForce" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -2300,10 +2440,6 @@
               <option name="myItemId" value="com" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="customizedwidgets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2315,64 +2451,15 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tool" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gripForceProject" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gripAndTipForce" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gripandtipforce" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gripForceProject" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gripAndTipForce" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="viewpagerui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidManifestsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2385,9 +2472,9 @@
     <property name="android.sdk.path" value="$PROJECT_DIR$/../../android-sdk-macosx" />
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="true" />
-    <property name="android.project.structure.last.selected" value="SDK Location" />
+    <property name="android.project.structure.last.selected" value="gripAndTipForce" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/New Unity Project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../androidLibraries/New Unity Project" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="41073f1c47dd8f99" />
@@ -2619,28 +2706,28 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.49574015" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17988668" sideWeight="0.3796446" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2609047" sideWeight="0.5084388" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4022663" sideWeight="0.33279485" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32719547" sideWeight="0.48949918" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4022663" sideWeight="0.66720515" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32719547" sideWeight="0.53634894" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32719547" sideWeight="0.46365106" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4022663" sideWeight="0.65508884" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.46607432" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24920128" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2609047" sideWeight="0.49156117" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.45476574" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286119" sideWeight="0.44830373" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17988668" sideWeight="0.4911147" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960597" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.4978701" order="7" side_tool="false" content_ui="tabs" />
@@ -2676,7 +2763,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="19" column="68" selection-start-line="19" selection-start-column="68" selection-end-line="19" selection-end-column="68" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2684,7 +2770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2701,19 +2786,15 @@
           <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="613" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#7592:9242" expanded="false" />
             <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#13039#13081#0" expanded="false" />
+            <element signature="e#12456#12498#0" expanded="false" />
             <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22037:22627" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
+            <element signature="class#21388:21978" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#21388:21978" expanded="false" />
             <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35493#37780#0" expanded="true" />
-            <element signature="e#37779#37780#0" expanded="true" />
             <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
@@ -2722,25 +2803,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/activity_experiment_3.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/activity_experiment.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
@@ -2748,12 +2827,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="162" column="10" selection-start-line="162" selection-start-column="10" selection-end-line="162" selection-end-column="10" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
-            <element signature="e#9269#9445#0" expanded="true" />
-            <element signature="e#9444#9445#0" expanded="true" />
-            <element signature="e#9881#9882#0" expanded="true" />
-            <element signature="e#9931#9932#0" expanded="true" />
             <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
             <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
           </folding>
@@ -2771,10 +2845,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="186" column="43" selection-start-line="186" selection-start-column="43" selection-end-line="186" selection-end-column="43" />
-          <folding>
-            <element signature="method#initArray#0;class#TxtFileManager#0" expanded="false" />
-            <element signature="method#finalize#0;class#TxtFileManager#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2782,7 +2852,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="19" column="68" selection-start-line="19" selection-start-column="68" selection-end-line="19" selection-end-column="68" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2790,7 +2859,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2807,19 +2875,15 @@
           <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#7592:9242" expanded="false" />
             <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#13039#13081#0" expanded="false" />
+            <element signature="e#12456#12498#0" expanded="false" />
             <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22037:22627" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
+            <element signature="class#21388:21978" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#21388:21978" expanded="false" />
             <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35493#37780#0" expanded="true" />
-            <element signature="e#37779#37780#0" expanded="true" />
             <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
@@ -2856,13 +2920,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/fragment_input_data.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.51386863">
           <caret line="126" column="74" selection-start-line="126" selection-start-column="74" selection-end-line="126" selection-end-column="74" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/jakewharton/viewpagerui/FragmentContainsViewPager.java">
@@ -2897,25 +2961,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/activity_experiment_2.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/activity_experiment.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/InputDataFragment.java">
@@ -2932,13 +2994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.52285194">
-          <caret line="22" column="33" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/CharBoxesLayout.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28153566">
@@ -2947,14 +3002,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/res/layout/activity_experiment_3.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
-          <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/FileType.java">
@@ -2968,14 +3022,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16087751">
           <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -3018,15 +3064,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14611872">
           <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.94170403">
-          <caret line="182" column="37" selection-start-line="182" selection-start-column="37" selection-end-line="182" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3034,7 +3071,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9041096">
           <caret line="91" column="9" selection-start-line="91" selection-start-column="9" selection-end-line="91" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3042,17 +3078,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28">
           <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="7.3333335">
-          <caret line="224" column="6" selection-start-line="224" selection-start-column="6" selection-end-line="224" selection-end-column="6" />
-          <folding>
-            <element signature="method#BluetoothManager#0;class#BluetoothManager#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3060,26 +3085,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.35180724">
           <caret line="645" column="16" selection-start-line="645" selection-start-column="16" selection-end-line="645" selection-end-column="16" />
-          <folding>
-            <element signature="e#18669#18670#0" expanded="true" />
-            <element signature="e#18720#18721#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.64637">
-          <caret line="61" column="27" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/InputDataActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.915691">
-          <caret line="124" column="54" selection-start-line="124" selection-start-column="54" selection-end-line="124" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3087,7 +3092,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.618267">
           <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3096,8 +3100,17 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
           <folding>
-            <element signature="e#1440#1441#0" expanded="true" />
-            <element signature="e#1462#1463#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1248#1249#0" expanded="false" />
+            <element signature="e#1273#1274#0" expanded="false" />
+            <element signature="e#1321#1322#0" expanded="false" />
+            <element signature="e#1350#1351#0" expanded="false" />
+            <element signature="e#1385#1386#0" expanded="false" />
+            <element signature="e#1408#1409#0" expanded="false" />
+            <element signature="e#1440#1441#0" expanded="false" />
+            <element signature="e#1462#1463#0" expanded="false" />
+            <element signature="e#1496#1497#0" expanded="false" />
+            <element signature="e#1520#1521#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3106,32 +3119,87 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="4.6903553">
           <caret line="103" column="12" selection-start-line="103" selection-start-column="12" selection-end-line="103" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/InputDataActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.05076142">
+          <caret line="124" column="54" selection-start-line="124" selection-start-column="54" selection-end-line="124" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothSettingActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.0762944">
+          <caret line="105" column="44" selection-start-line="105" selection-start-column="44" selection-end-line="105" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.568528">
+          <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="165" column="38" selection-start-line="165" selection-start-column="38" selection-end-line="165" selection-end-column="38" />
           <folding>
-            <element signature="method#initArray#0;class#TxtFileManager#0" expanded="false" />
-            <element signature="method#finalize#0;class#TxtFileManager#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#6541#6542#0" expanded="false" />
+            <element signature="e#6587#6588#0" expanded="false" />
+            <element signature="e#6738#6739#0" expanded="false" />
+            <element signature="e#6774#6775#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+          <folding>
+            <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
+            <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
+            <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/BluetoothClientConnectService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="300" column="79" selection-start-line="300" selection-start-column="76" selection-end-line="300" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ExperimentActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.222222">
-          <caret line="615" column="94" selection-start-line="615" selection-start-column="94" selection-end-line="615" selection-end-column="94" />
+        <state vertical-scroll-proportion="-6.16">
+          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#setSPenToolActionWithAllCanvases#0;class#8175:9825" expanded="false" />
+            <element signature="method#setSPenToolActionWithAllCanvases#0;class#7592:9242" expanded="false" />
             <element signature="class#CustomizedSpenTouchListener#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#13039#13081#0" expanded="false" />
+            <element signature="e#12456#12498#0" expanded="false" />
             <element signature="method#changeExCharFont#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#prepareForNextTestingSet#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#showPostExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="method#showPreExperimentView#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#22037:22627" expanded="false" />
-            <element signature="method#onServiceDisconnected#0;class#22037:22627" expanded="false" />
+            <element signature="class#21388:21978" expanded="false" />
+            <element signature="method#onServiceDisconnected#0;class#21388:21978" expanded="false" />
             <element signature="method#changeExperimentLayout#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="class#BeforeViewShownTask#0;class#ExperimentActivity#0" expanded="false" />
-            <element signature="e#35493#37780#0" expanded="true" />
-            <element signature="e#37779#37780#0" expanded="true" />
             <element signature="method#onDestroy#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#selectButton#0;class#ExperimentActivity#0" expanded="false" />
             <element signature="method#setBtnEnabled#0;class#ExperimentActivity#0" expanded="false" />
@@ -3139,27 +3207,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ProjectConfig.java">
+    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="13.820164">
-          <caret line="267" column="0" selection-start-line="267" selection-start-column="0" selection-end-line="267" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#getFont#0;class#ProjectConfig#0" expanded="false" />
-            <element signature="e#9269#9445#0" expanded="true" />
-            <element signature="e#9444#9445#0" expanded="true" />
-            <element signature="e#9881#9882#0" expanded="true" />
-            <element signature="e#9931#9932#0" expanded="true" />
-            <element signature="method#isDirPathWritable#0;class#ProjectConfig#0" expanded="false" />
-            <element signature="method#getFontFromFile#0;class#ProjectConfig#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gripAndTipForce/src/main/java/com/mhci/gripandtipforce/ImgFileManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.4010153">
-          <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+        <state vertical-scroll-proportion="2.8053691">
+          <caret line="57" column="49" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
           <folding />
         </state>
       </provider>

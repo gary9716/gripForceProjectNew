@@ -51,6 +51,7 @@ import com.samsung.android.sdk.pen.settingui.SpenSettingEraserLayout;
 import com.samsung.android.sdk.pen.settingui.SpenSettingPenLayout;
 import com.mhci.gripandtipforce.BluetoothClientConnectService.LocalBinder;
 
+
 public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	public final static String debug_tag = "Experiment";
@@ -147,21 +148,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		Log.d(debug_tag, "Experiment started");
 
 		startingTimestampInMillis = System.currentTimeMillis();
-
-//		SharedPreferences preferences = getSharedPreferences(ProjectConfig.Key_Preference_ExperimentSetting, Context.MODE_PRIVATE);
-//		if(preferences != null) {
-//			//if use the key cannot find the value, it would be set to a default value.
-//			expSetting = preferences.getString(ProjectConfig.Key_Preference_TestingLayout, ProjectConfig.SeparateChars);
-//		}
-//
-//		if(expSetting.equals(ProjectConfig.OneLine)) {
-//			numCharBoxesInCol = 1;
-//			numWritableCharBoxCols = 1;
-//		}
-//		else { //default Separate Chars
-//			numCharBoxesInCol = 5;
-//			numWritableCharBoxCols = 1;
-//		}
 
 		mContext = this;
 		uiThreadHandler = new Handler(getMainLooper());
@@ -366,10 +352,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	
 	public void updateExChars(String[] exChars) {
 		String[] charsUsedForUpdate = null;
-
-//		if(cachedChars != null) {
-//			isLoadingChars = false;
-//		}
 
 		if(exChars == null) {
 			if(cachedChars != null) {
@@ -663,6 +645,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private final int charBoxHeight = inchToPixels(ProjectConfig.inchPerCM * 2.1f);
 	private final int charBoxOneLineHeight = inchToPixels(ProjectConfig.inchPerCM * 16.1f);
 	private final int charBoxWidth = charBoxHeight;
+    private final int oneLineWidth = (int)(charBoxWidth * 2f);
 
 	private void changeExperimentLayout(CharBoxesLayout layoutSetting) {
 		expLayoutSetting = layoutSetting;
@@ -702,7 +685,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 					LinearLayout.LayoutParams.WRAP_CONTENT,  //width
 					LinearLayout.LayoutParams.WRAP_CONTENT); //height
 
-			charGroupsContainerLayoutParams.topMargin = 50;
+			charGroupsContainerLayoutParams.topMargin = 70;
 
 			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
 				charGroupsContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -793,12 +776,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 
 			LinearLayout.LayoutParams imgRLP = new LinearLayout.LayoutParams(
-					charBoxWidth,
+					oneLineWidth,
                     LinearLayout.LayoutParams.WRAP_CONTENT
 			);
 
 			LinearLayout.LayoutParams oneLine_LP = new LinearLayout.LayoutParams(
-					charBoxWidth,
+					oneLineWidth,
                     LinearLayout.LayoutParams.MATCH_PARENT
 			);
 

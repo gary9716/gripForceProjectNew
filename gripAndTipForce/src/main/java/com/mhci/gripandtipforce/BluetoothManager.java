@@ -24,11 +24,11 @@ public class BluetoothManager extends BroadcastReceiver{
 	private LinkedList<BroadcastReceiver> registeredReceivers = null;
 	private ArrayAdapter<String> mDataAdapter = null;
 	private boolean mOriginalBTStateEnabled = false;
-	private LocalBroadcastManager lbcManager;
-
+	//private LocalBroadcastManager lbcManager;
+    private IntentFilter btFilter = null;
 	public BluetoothManager(Context context, BroadcastReceiver customizedReceiver, ArrayAdapter<String> dataAdapter) {
 		mContext = context;
-		lbcManager = LocalBroadcastManager.getInstance(context);
+		//lbcManager = LocalBroadcastManager.getInstance(context);
 		mBTAdapter = BluetoothAdapter.getDefaultAdapter();
 		if(mBTAdapter == null) {
 			Toast.makeText(mContext, "your device doesn't support bluetooth. Bluetooth Feature turned off", Toast.LENGTH_LONG).show();
@@ -42,10 +42,18 @@ public class BluetoothManager extends BroadcastReceiver{
 		else {
 			mOriginalBTStateEnabled = true;
 		}
-		
+
+        btFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        btFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+
 		registeredReceivers = new LinkedList<BroadcastReceiver>();
-		setBroadcastReceiver(customizedReceiver);
-		
+		if(customizedReceiver != null) {
+            registeredReceivers.add(customizedReceiver);
+        }
+        if(context instanceof BluetoothSettingActivity) {
+            registeredReceivers.add(this);
+        }
+
 		mDataAdapter = dataAdapter;
 		
 		if(dataAdapter == null) {
@@ -60,11 +68,6 @@ public class BluetoothManager extends BroadcastReceiver{
 	protected void finalize() throws Throwable {
 		// TODO Auto-generated method stub
 		super.finalize();
-		if(registeredReceivers != null) {
-			for(BroadcastReceiver receiver : registeredReceivers) {
-				lbcManager.unregisterReceiver(receiver);
-			}
-		}
 		
 		if(mOriginalBTStateEnabled) {
 			mBTAdapter.enable();	
@@ -77,23 +80,44 @@ public class BluetoothManager extends BroadcastReceiver{
 		mContext = null;
 		
 	}
-	
-	public void setBroadcastReceiver(BroadcastReceiver customizedReceiver) {
-		// Register the BroadcastReceiver
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		
-		// Don't forget to unregister during onDestroy	
 
-		lbcManager.registerReceiver(this, filter);
-		registeredReceivers.add(this);
-		
-		if(customizedReceiver != null) {
-			lbcManager.registerReceiver(customizedReceiver, filter);
-			registeredReceivers.add(customizedReceiver);
-		}
-		
-	}
+    public void registerAllReceivers() {
+        if(registeredReceivers != null) {
+            for(BroadcastReceiver receiver : registeredReceivers) {
+                try {
+                    mContext.registerReceiver(receiver, btFilter);
+                }
+                catch(Exception e) {}
+            }
+        }
+    }
+
+    public void unregisterAllReceivers() {
+        if(registeredReceivers != null) {
+            for(BroadcastReceiver receiver : registeredReceivers) {
+                try {
+                    mContext.unregisterReceiver(receiver);
+                }
+                catch(Exception e) {}
+            }
+        }
+        registeredReceivers = null;
+    }
+
+//	public void setBroadcastReceiver(BroadcastReceiver customizedReceiver) {
+//		// Register the BroadcastReceiver
+//
+//
+//		// Don't forget to unregister during onDestroy
+//		mContext.registerReceiver(this,filter);
+//        registeredReceivers.add(this);
+//
+//		if(customizedReceiver != null) {
+//			mContext.registerReceiver(customizedReceiver, filter);
+//			registeredReceivers.add(customizedReceiver);
+//		}
+//
+//	}
 	
 	private Set<String> setOfDevices; 
 	
@@ -175,14 +199,18 @@ public class BluetoothManager extends BroadcastReceiver{
 	
 	public boolean createBond(BluetoothDevice btDevice) throws Exception { 
         //pretty dirty code that use reflection
-		Method createBondMethod = btDevice.getClass().getMethod("createBond");  
-		Boolean returnValue = false;
-		if(createBondMethod != null) {
-			returnValue = (Boolean) createBondMethod.invoke(btDevice);  
+        Boolean returnValue = false;
+        try {
+            Method createBondMethod = btDevice.getClass().getMethod("createBond");
+            if (createBondMethod != null) {
+                returnValue = (Boolean) createBondMethod.invoke(btDevice);
+            } else {
+                Log.d(DEBUG_TAG, "reflection here may not work anymore");
+            }
         }
-		else {
-			Log.d(DEBUG_TAG, "reflection here may not work anymore");
-		}
+        catch(Exception e) {
+
+        }
 		return returnValue.booleanValue();  
     }  
 	

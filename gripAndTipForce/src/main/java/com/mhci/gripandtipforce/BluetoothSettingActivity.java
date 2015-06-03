@@ -34,7 +34,7 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 	
 	private Context mContext = null;
 	private LocalBroadcastManager mLBCManager;
-	private BluetoothManager btManager;
+	//private BluetoothManager btManager;
 	private TextView mLastSelectedBT = null;
 	private TextView mCurrentSelectedBT = null;
 	private Button nextPageButton = null;
@@ -58,7 +58,7 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		mDisplayAdapter = new BTDeviceInfoAdapter(this, android.R.layout.simple_list_item_1);
 		
 		popwin = new PopupwinForSelectingDeviceUsingAlertDialog(mContext);
-		btManager = new BluetoothManager(this, btEventReceiver, mDisplayAdapter);
+		mBTManager = new BluetoothManager(this, btEventReceiver, mDisplayAdapter);
 		
 		mCurrentSelectedBT = (TextView)findViewById(R.id.text_currently_selected_device);
 		mCurrentSelectedBT.setText(emptyStateName);
@@ -78,9 +78,7 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		IntentFilter intentFilter = new IntentFilter(BluetoothClientConnectService.Msg_update_info);
 		mLBCManager = LocalBroadcastManager.getInstance(mContext);
 		mLBCManager.registerReceiver(infoReceiver, intentFilter);
-		
-		mBTManager = new BluetoothManager(mContext, null, null);
-		
+
 		mBTSettings = getSharedPreferences(ProjectConfig.Key_Preference_UserInfo, Context.MODE_PRIVATE);
 		if(mBTSettings != null) {
 			mLastSelectedBT.setText(mBTSettings.getString(ProjectConfig.Key_Preference_LastSelectedBT, emptyStateName));
@@ -95,10 +93,17 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 			mLBCManager.unregisterReceiver(infoReceiver);
 		}
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mBTManager.registerAllReceivers();
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mBTManager.unregisterAllReceivers();
 		Log.d(debug_tag, "onPause in " + BluetoothSettingActivity.class.getName());
 	}
 	
@@ -183,13 +188,13 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 		public void onClick(View v) {
 			if(v.getId() == R.id.button_select_from_bonded_devices) {
 				setViewUnclickable(v);
-				btManager.getBondedDevicesInfoAndUpdate();
+				mBTManager.getBondedDevicesInfoAndUpdate();
 				popwin.show();
 				
 			}
 			else if(v.getId() == R.id.button_select_from_discovered_devices) {
 				setViewUnclickable(v);
-				btManager.startDiscovering();
+				mBTManager.startDiscovering();
 				popwin.show();
 				popwin.showProgressBar(true);
 			}
@@ -338,7 +343,7 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity{
 			}
 				
 			showProgressBar(false);
-			btManager.stopDiscovering();
+			mBTManager.stopDiscovering();
 			mDisplayAdapter.setSelectedIndex(-1);
 			
 		}

@@ -22,8 +22,8 @@ public class ProjectConfig {
 	public static boolean useSystemBarHideAndShow = true;
 	public final static boolean useRealSDCard = true;
 	public static final int numBytesPerSensorStrip = 19;
-	public static final int numSensorStrips = 6;
-	
+	public static final int numSensorStrips = 5;
+	public static final int minSensorVal = 20;
 	public final static float inchPerCM = 0.393700787f;
 	public static final UUID UUIDForBT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	public static final String txtFileExtension = ".txt";

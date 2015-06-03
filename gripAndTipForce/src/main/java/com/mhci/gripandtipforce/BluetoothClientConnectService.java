@@ -298,7 +298,7 @@ public class BluetoothClientConnectService extends Service{
 				stringBuffer.append(timestampToLog);
 				for(int sensorDataIndex = 0;sensorDataIndex < numBytesInOneSensorStrip;sensorDataIndex++) {
 					stringBuffer.append(',');
-					stringBuffer.append((int)((buffer[sensorStripIndex*numBytesInOneSensorStrip +  sensorDataIndex]) & 0xFF));
+					stringBuffer.append(((buffer[sensorStripIndex*numBytesInOneSensorStrip +  sensorDataIndex]) & 0xFF) - ProjectConfig.minSensorVal);
 				}
 				stringBuffer.append('\n');
 			}
