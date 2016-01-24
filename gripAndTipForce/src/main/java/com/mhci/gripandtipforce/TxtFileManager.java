@@ -10,14 +10,17 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
 
-public class TxtFileManager extends FileManager{
+import com.mhci.gripandtipforce.activity.ExperimentActivity;
+import com.mhci.gripandtipforce.model.FileDirInfo;
+import com.mhci.gripandtipforce.model.FileType;
+import com.mhci.gripandtipforce.model.ProjectConfig;
+import com.mhci.gripandtipforce.utils.FileManager;
+
+public class TxtFileManager extends FileManager {
 	private final static String DEBUG_TAG = "TxtFileManager";
 	private File mFileDir = null;
 	private FileType mFileType = FileType.Log;
@@ -31,7 +34,7 @@ public class TxtFileManager extends FileManager{
 		}
 	}
 	
-	public TxtFileManager(FileDirInfo dirInfo,Context context) {
+	public TxtFileManager(FileDirInfo dirInfo, Context context) {
 		super(context, dirInfo.getFileType());
 		readUserConfig();
 		
@@ -335,7 +338,6 @@ public class TxtFileManager extends FileManager{
 //
 //		@Override
 //		public void run() {
-//			// TODO Auto-generated method stub
 //			try {
 //				writerArray[mArrayIndex].write(mData);
 //				writerArray[mArrayIndex].newLine();

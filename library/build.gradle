@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 16
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
-        minSdkVersion 4
-        targetSdkVersion 4
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
@@ -18,7 +20,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.akexorcist:bluetoothspp:1.0.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'cn.trinea.android.common:trinea-android-common:4.2.15'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
 }

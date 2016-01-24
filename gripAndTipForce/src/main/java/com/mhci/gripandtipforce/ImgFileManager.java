@@ -13,10 +13,14 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mhci.gripandtipforce.model.FileDirInfo;
+import com.mhci.gripandtipforce.model.FileType;
+import com.mhci.gripandtipforce.model.ProjectConfig;
+import com.mhci.gripandtipforce.utils.FileManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class ImgFileManager extends FileManager{
+public class ImgFileManager extends FileManager {
 	public final static String DEBUG_TAG = ImgFileManager.class.toString();
 	private Context mContext;
 	private File imgDir = null;

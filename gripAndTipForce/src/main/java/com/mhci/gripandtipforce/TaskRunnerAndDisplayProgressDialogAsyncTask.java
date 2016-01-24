@@ -32,7 +32,6 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 	}
 	
 	public TaskRunnerAndDisplayProgressDialogAsyncTask(Context context,Runnable taskToRunInBG,Runnable postTaskAfterBGTask,String title,String msg) {
-		// TODO Auto-generated constructor stub
 		mContext = context;
 		mBGTaskList = new Runnable[]{taskToRunInBG};
 		mPostTaskAfterBGTask = postTaskAfterBGTask;
@@ -42,7 +41,6 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 	
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
 		super.onPreExecute();
 		String msg;
 		if(userDefinedMsg != null) {
@@ -71,7 +69,6 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 	
 	@Override
 	protected Void doInBackground(Void... arg0) {
-		// TODO Auto-generated method stub
 		if(mBGTaskList != null) {
 			for(Runnable task : mBGTaskList) {
 				task.run();
@@ -82,7 +79,6 @@ public class TaskRunnerAndDisplayProgressDialogAsyncTask extends AsyncTask<Void,
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		if(mPostTaskAfterBGTask != null) {
 			mPostTaskAfterBGTask.run();

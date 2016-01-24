@@ -7,7 +7,6 @@
         android:id="@+id/table_text_bt_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="110dp" >
@@ -61,56 +60,63 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow4"
+            android:id="@+id/tableRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
+            <TextView
+                android:id="@+id/text_explanation_bt_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="藍芽狀態："
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="50sp" />
+
+            <TextView
+                android:id="@+id/text_current_bt_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已斷線"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="50sp" />
         </TableRow>
+
     </TableLayout>
 
     <Button
-        android:id="@+id/button_select_from_discovered_devices"
+        android:id="@+id/button_select_from_available_devices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_select_from_bonded_devices"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
         android:padding="@dimen/button_padding"
-        android:text="探索目前可用的藍芽"
-        android:textSize="@dimen/bt_setting_text_size" />
-
-    <Button
-        android:id="@+id/button_select_from_bonded_devices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/button_padding"
-        android:text="從已配對的藍芽中選擇"
-        android:textSize="@dimen/bt_setting_text_size" />
-
-    <Button
-        android:id="@+id/button_test_connection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/table_text_bt_setting"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:padding="@dimen/button_padding"
-        android:text="連線"
+        android:text="選取目前可用的藍芽"
         android:textSize="@dimen/bt_setting_text_size"
-        android:visibility="gone" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="180dp" />
 
     <Button
         android:id="@+id/button_experiment_next_step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_select_from_discovered_devices"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
         android:padding="@dimen/button_padding"
         android:text="下一步"
         android:textSize="@dimen/bt_setting_text_size"
-        android:visibility="gone" />
+        android:visibility="visible"
+        android:layout_above="@+id/button_bt_connect"
+        android:layout_marginBottom="70dp" />
+
+    <Button
+        android:id="@+id/button_bt_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/button_padding"
+        android:text="開始連線"
+        android:textSize="@dimen/bt_setting_text_size"
+        android:visibility="visible"
+        android:layout_above="@+id/button_select_from_available_devices"
+        android:layout_marginBottom="70dp" />
 
 </RelativeLayout>
