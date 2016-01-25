@@ -95,6 +95,9 @@ public class BluetoothManager{
 	}
 
 	public void endLogging() {
+		toStoreData = false;
+		setAutoReconnectingMode(false);
+		disconnect();
 		if(cachedLogs.size() > 0) {
 			txtFileManager.appendLogs(logFileIndex, cachedLogs);
 		}
@@ -219,32 +222,43 @@ public class BluetoothManager{
 					return;
 				}
 
+//				Log.d(DEBUG_TAG,"len:" + data.length);
 				int numIncomingBytes = data.length;
-				if(remainedBytesToCollect > 0) {
-					if(remainedBytesToCollect <= numIncomingBytes) {
-						copyBytesIntoBuffer(dataBuffer, data, totalNumDataPoints - remainedBytesToCollect, 0, remainedBytesToCollect);
-						parsingDataAndStored(dataBuffer, 0);
-						int numBytesHasBeenUsed = remainedBytesToCollect;
-						remainedBytesToCollect = 0;
-						if(numIncomingBytes - numBytesHasBeenUsed > 0) {
-							startDetectHeader(data, numBytesHasBeenUsed);
-						}
-					}
-					else {
-						copyBytesIntoBuffer(dataBuffer, data, totalNumDataPoints - remainedBytesToCollect, 0, numIncomingBytes);
-						remainedBytesToCollect -= numIncomingBytes;
-					}
+
+				//due to current library would get rid of 0x0D and 0x0A
+				//we only need to check whether current array size = 114
+				if(numIncomingBytes == 114) { //which means complete data
+					parsingDataAndStored(data, 0);
 				}
-				else {
-					startDetectHeader(data, 0);
-				}
+
+
+//				if(remainedBytesToCollect > 0) {
+//					if(remainedBytesToCollect <= numIncomingBytes) {
+//						copyBytesIntoBuffer(dataBuffer, data, totalNumDataPoints - remainedBytesToCollect, 0, remainedBytesToCollect);
+//						parsingDataAndStored(dataBuffer, 0);
+//						int numBytesHasBeenUsed = remainedBytesToCollect;
+//						remainedBytesToCollect = 0;
+//						if(numIncomingBytes - numBytesHasBeenUsed > 0) {
+//							startDetectHeader(data, numBytesHasBeenUsed);
+//						}
+//					}
+//					else {
+//						copyBytesIntoBuffer(dataBuffer, data, totalNumDataPoints - remainedBytesToCollect, 0, numIncomingBytes);
+//						remainedBytesToCollect -= numIncomingBytes;
+//					}
+//				}
+//				else {
+//					startDetectHeader(data, 0);
+//				}
 			}
 
 			private void startDetectHeader(byte[] data, int startIndex) {
 				int numIncomingBytes = data.length;
 				boolean headerNotDetected = true;
 				for (int i = startIndex + 1; i < numIncomingBytes; i++) {
-					if (data[i - 1] == headerByte1 && data[i] == headerByte2) {
+//					Log.d(DEBUG_TAG, "data:" + (data[i - 1] & 0xFF) + "," + (data[i] & 0xFF));
+					if ( ((data[i - 1] & 0xFF) == 0x0D) && ((data[i] & 0xFF) == 0x0A) ) {
+						Log.d(DEBUG_TAG,"header detected");
 						headerNotDetected = false;
 						int remainedBytesInData = (numIncomingBytes - i - 1);
 						if(remainedBytesInData >= totalNumDataPoints) {
@@ -317,6 +331,7 @@ public class BluetoothManager{
 			stringBuffer.append('\n');
 		}
 
+		Log.d(DEBUG_TAG,"add to cached logs, len:" + stringBuffer.toString().length());
 		cachedLogs.add(stringBuffer.toString());
 		if(cachedLogs.size() >= ProjectConfig.maxCachedLogData) {
 			mWorkHandler.post(txtFileManager.getAppendListLogTask(logFileIndex, cachedLogs));

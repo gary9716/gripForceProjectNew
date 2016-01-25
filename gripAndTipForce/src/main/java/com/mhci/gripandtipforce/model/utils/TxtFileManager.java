@@ -99,6 +99,7 @@ public class TxtFileManager extends FileManager {
 			writer = new BufferedWriter(new FileWriter(logFile,true));
 			closeFile(arrayIndex);
 			writerArray[arrayIndex] = writer;
+			logFiles[arrayIndex] = logFile;
 			return true;
 		}
 		catch(Exception e) {

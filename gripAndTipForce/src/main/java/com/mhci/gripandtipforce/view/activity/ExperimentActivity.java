@@ -178,6 +178,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		packageName = getPackageName();
 		mRes = getResources();
 
+		mLBCManager = LocalBroadcastManager.getInstance(mContext);
+		filter = new IntentFilter(Action_update_chars);
+//		filter.addAction(BluetoothClientConnectService.Msg_update_info);
+//		filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
+//		filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
+
 		initThreadAndHandler();
 
 		/* preOrPostExperimentView */
@@ -680,13 +686,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			for(int i = 0;i < numCharBoxesInAPage;i++) {
 				mWritableCharBoxNames[i] = "WritableChar" + (i + 1);
 			}
-
-			//TODO: use EventBus
-			mLBCManager = LocalBroadcastManager.getInstance(mContext);
-			filter = new IntentFilter(Action_update_chars);
-//			filter.addAction(BluetoothClientConnectService.Msg_update_info);
-//			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
-//			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
 
 			/* Preference and Other Manager Settings */
 			additionalSetName = ProjectConfig.getAdditionalSetFileName();
