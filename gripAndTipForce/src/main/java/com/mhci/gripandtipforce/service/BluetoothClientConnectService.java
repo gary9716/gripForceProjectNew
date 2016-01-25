@@ -18,10 +18,10 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.mhci.gripandtipforce.utils.BluetoothManager;
+import com.mhci.gripandtipforce.model.utils.BluetoothManager;
 import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
-import com.mhci.gripandtipforce.TxtFileManager;
+import com.mhci.gripandtipforce.model.utils.TxtFileManager;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
 import java.lang.StringBuffer;
@@ -51,7 +51,7 @@ public class BluetoothClientConnectService extends Service{
 	//private final static int numBytesPerSensorStrip = ProjectConfig.numBytesPerSensorStrip;
 	private final static int headerByte1 = 0x0D;
 	private final static int headerByte2 = 0x0A;
-	
+
 	private boolean toStoreData = false;
 	
 	private BluetoothManager mBTManager = null;
@@ -289,13 +289,13 @@ public class BluetoothClientConnectService extends Service{
 			
 			int numStrips = ProjectConfig.numSensorStrips;
 			int numBytesInOneSensorStrip = ProjectConfig.numBytesPerSensorStrip;
-			long timestampToLog = ProjectConfig.getTimestamp(startingTimestamp);
+			long timestampToLog = ProjectConfig.getTimestamp();
 			
 			for(int sensorStripIndex = 0;sensorStripIndex < numStrips;sensorStripIndex++) {
 				stringBuffer.append(timestampToLog);
 				for(int sensorDataIndex = 0;sensorDataIndex < numBytesInOneSensorStrip;sensorDataIndex++) {
 					stringBuffer.append(',');
-					stringBuffer.append(((buffer[sensorStripIndex*numBytesInOneSensorStrip +  sensorDataIndex]) & 0xFF) - ProjectConfig.minSensorVal);
+					stringBuffer.append(((buffer[sensorStripIndex*numBytesInOneSensorStrip + sensorDataIndex]) & 0xFF) - ProjectConfig.minSensorVal);
 				}
 				stringBuffer.append('\n');
 			}

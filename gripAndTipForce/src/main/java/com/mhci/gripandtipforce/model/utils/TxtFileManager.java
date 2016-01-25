@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce;
+package com.mhci.gripandtipforce.model.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +15,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mhci.gripandtipforce.activity.ExperimentActivity;
+import com.mhci.gripandtipforce.view.activity.ExperimentActivity;
 import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
 import com.mhci.gripandtipforce.model.ProjectConfig;
-import com.mhci.gripandtipforce.utils.FileManager;
+
+import cn.trinea.android.common.util.FileUtils;
 
 public class TxtFileManager extends FileManager {
 	private final static String DEBUG_TAG = "TxtFileManager";
@@ -26,26 +28,15 @@ public class TxtFileManager extends FileManager {
 	private FileType mFileType = FileType.Log;
 	private Context mContext;
 	private BufferedWriter[] writerArray;
+	private File[] logFiles;
 	private LocalBroadcastManager mLBCManager = null;
-	
-	private void initArray(BufferedWriter[] array) {
-		for(BufferedWriter writer : array) {
-			writer = null;
-		}
-	}
-	
+
 	public TxtFileManager(FileDirInfo dirInfo, Context context) {
 		super(context, dirInfo.getFileType());
 		readUserConfig();
-		
-//		if(!FileDirInfo.isExternalStorageWritable()) {
-//			Toast.makeText(context, "資料無法寫入指定資料夾,請再次確認設定無誤", Toast.LENGTH_LONG).show();
-//		}
-		
+
 		mContext = context;
 		mFileType = dirInfo.getFileType();
-		//initThreadAndHandler(mFileType.name() + System.currentTimeMillis());
-		
 		mLBCManager = LocalBroadcastManager.getInstance(mContext);
 		
 		switch(mFileType) {
@@ -55,43 +46,145 @@ public class TxtFileManager extends FileManager {
 					numOfInstanceToAlloc = (new Integer(dirInfo.getOtherInfo())).intValue();
 				}
 				writerArray = new BufferedWriter[numOfInstanceToAlloc];
+				logFiles = new File[numOfInstanceToAlloc];
 				break;
 			case PersonalInfo:
 				writerArray = new BufferedWriter[1];
+				logFiles = new File[1];
 				break;
 			default:
 				break;
 		}
-		
-		initArray(writerArray);
+
 		mFileDir = new File(dirInfo.getDirPath());
 		
 	}
 	
-	private BufferedWriter createOrOpenTxtFile(String fileName) {
+	private File createOrOpenLogFile(String fileName) {
 		if(mFileDir == null) {
 			Toast.makeText(mContext, "txtDir is null ,failed to create log", Toast.LENGTH_LONG).show();
 			return null;
 		}
-		
-		BufferedWriter writer;
+
+		File txtFile = null;
+
 		try {
-			//File txtFile = new File(mFileDir, getNonDuplicateFileName(mFileDir.getPath(), fileName));
-			File txtFile = new File(mFileDir, fileName);
+//			Log.d(debug_tag,"filePath:" + mFileDir.getAbsolutePath());
+			txtFile = new File(mFileDir, fileName);
 			if(!txtFile.exists()) {
 				if(!txtFile.createNewFile()) {
 					Toast.makeText(mContext, "creating txt file failed", Toast.LENGTH_LONG).show();
 					return null;
 				}
 			}
-			writer = new BufferedWriter(new FileWriter(txtFile,true));
 		}
 		catch(Exception e) {
-			writer = null;
+			txtFile = null;
+			Log.d(debug_tag,e.getLocalizedMessage());
 			Toast.makeText(mContext, "creating or openning txt file failed", Toast.LENGTH_LONG).show();
 		}
 		
-		return writer;
+		return txtFile;
+	}
+
+	//fileIndex is used for indexing in dictionary
+	public boolean createOrOpenLogFileSync(String fileName, int arrayIndex) {
+		if(arrayIndex >= writerArray.length) {
+			Log.d(debug_tag, "indexing out of bound in createOrOpenLogFileSync");
+			return false;
+		}
+
+		File logFile = createOrOpenLogFile(fileName);
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter(logFile,true));
+			closeFile(arrayIndex);
+			writerArray[arrayIndex] = writer;
+			return true;
+		}
+		catch(Exception e) {
+			Log.d(debug_tag, e.getLocalizedMessage());
+			return false;
+		}
+
+	}
+
+	public Runnable getCreateOrOpenCharLogFileTask(String logType,
+												   String userID,
+												   String dataSetName,
+												   String[] cachedChars,
+												   int logIndex,
+												   int charBoxIndex,
+												   int numFilesToCreateOrOpen) {
+		return new CreateOrOpenCharLogFileTask(
+				logType,
+				userID,
+				dataSetName,
+				cachedChars,
+				logIndex,
+				charBoxIndex,
+				numFilesToCreateOrOpen);
+	}
+
+	private class CreateOrOpenCharLogFileTask implements Runnable {
+
+		//charIndex is the order of certain char in Example Chars file
+		//charBoxIndex is the order of certain char on the experiment view
+		int mLogIndex;
+		int mCharBoxIndex;
+		int mNumFilesToCreateOrOpen;
+		String mFileNamePrefix = null;
+		String[] cachedChars = null;
+
+		public CreateOrOpenCharLogFileTask(String logType,
+										   String userID,
+										   String dataSetName,
+										   String[] cachedChars,
+										   int logIndex,
+										   int charBoxIndex,
+										   int numFilesToCreateOrOpen) {
+			this.cachedChars = cachedChars;
+			this.mFileNamePrefix = logType + "_" + userID + "_" + dataSetName + "_";
+			this.mLogIndex = logIndex;
+			this.mCharBoxIndex = charBoxIndex;
+			this.mNumFilesToCreateOrOpen = numFilesToCreateOrOpen;
+		}
+
+		@Override
+		public void run() {
+			int numLogsToLoad = mNumFilesToCreateOrOpen;
+			if(cachedChars != null) {
+				if(cachedChars.length - mLogIndex < numLogsToLoad) {
+					numLogsToLoad = cachedChars.length - mLogIndex;
+				}
+			}
+			for(int i = 0;i < numLogsToLoad;i++) {
+				createOrOpenLogFileSync(
+						mFileNamePrefix + (mLogIndex + i + 1) + ProjectConfig.txtFileExtension,
+						mCharBoxIndex + i);
+			}
+		}
+
+	}
+
+	public Runnable getAppendListLogTask(int arrayIndex, List<String> dataList) {
+		return new AppendListLogTask(arrayIndex,dataList);
+	}
+
+	private class AppendListLogTask implements Runnable {
+
+		int mArrayIndex;
+		List<String> mDataList;
+
+		public AppendListLogTask(int arrayIndex, List<String> dataList) {
+			mArrayIndex = arrayIndex;
+			mDataList = dataList;
+		}
+
+		@Override
+		public void run() {
+			appendLogs(mArrayIndex,mDataList);
+		}
 	}
 
 	public void appendLogWithNewlineSync(int arrayIndex, String data) {
@@ -110,7 +203,6 @@ public class TxtFileManager extends FileManager {
 		try {
 			writer.write(data);
 			writer.newLine();
-            //writer.flush();
 		}
 		catch(Exception e) {
 			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
@@ -119,38 +211,14 @@ public class TxtFileManager extends FileManager {
 		//Log.d(debug_tag,"done append log");
 		
 	}
-	
-	//fileIndex is used for indexing in dictionary 
-	public boolean createOrOpenLogFileSync(String fileName, int arrayIndex) {
-		if(arrayIndex >= writerArray.length) {
-			Log.d(debug_tag, "indexing out of bound in createOrOpenLogFileSync");
-			return false;
-		}
-		
-		BufferedWriter writer = createOrOpenTxtFile(fileName);
-		if(writer == null) {
-			return false;
-		}
 
-		closeFile(arrayIndex);
-		writerArray[arrayIndex] = writer;
-		return true;
+	public void appendLogs(int arrayIndex, List<String> linesOfData) {
+		File logFileToWrite = logFiles[arrayIndex];
+		FileUtils.writeFile(logFileToWrite.getAbsolutePath(), linesOfData, true);
 	}
 
-	public void closeFile(int arrayIndex) {
-		BufferedWriter writer = writerArray[arrayIndex];
-		if(writer != null) {
-			try {
-				writer.flush();
-				writer.close();
-			}
-			catch(Exception e) {
-				Log.d(DEBUG_TAG, e.getLocalizedMessage());
-			}
-			writerArray[arrayIndex] = null;
-		}
-	}
 
+	//read
 	public Runnable getLoadChineseCharTask(int grade) {
 		return (new LoadCharsTask(grade));
 	}
@@ -216,11 +284,6 @@ public class TxtFileManager extends FileManager {
 	}
 
 	private String[] loadChineseCharsDependOnGrade(int grade) {
-		
-//		if(!FileDirInfo.isExternalStorageReadable()) {
-//			Toast.makeText(mContext, "無法讀取指定資料夾的範例文字,請再次確認設定無誤", Toast.LENGTH_LONG).show();
-//			return null;
-//		}
 
 		File exampleCharsFile = null;
 		try {
@@ -279,6 +342,21 @@ public class TxtFileManager extends FileManager {
 	}
 
 
+	public void closeFile(int arrayIndex) {
+		BufferedWriter writer = writerArray[arrayIndex];
+		if(writer != null) {
+			try {
+				writer.flush();
+				writer.close();
+			}
+			catch(Exception e) {
+				Log.d(DEBUG_TAG, e.getLocalizedMessage());
+			}
+			writerArray[arrayIndex] = null;
+			logFiles[arrayIndex] = null;
+		}
+	}
+
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
@@ -288,75 +366,5 @@ public class TxtFileManager extends FileManager {
 			}
 		}
 	}
-
-
-//    //don't forget to close files before call this function
-//    public boolean rearrangeIndices(Pair<Integer, Integer> toIndices,Pair<Integer, Integer> fromIndices) {
-//        int[] toIndicesArray = new int[]{toIndices.first,toIndices.second};
-//        int[] fromIndicesArray = new int[]{fromIndices.first,fromIndices.second};
-//        int numFromIndicesToMap = fromIndicesArray[1] - fromIndicesArray[0];
-//        if(toIndicesArray[1] - toIndicesArray[0] != numFromIndicesToMap) {
-//            return false;
-//        }
-//        for(int i = 0;i < numFromIndicesToMap;i++) {
-//            int toIndex = toIndicesArray[0] + i;
-//            int fromIndex = fromIndicesArray[0] + i;
-//            writerArray[toIndex] = writerArray[fromIndex];
-//            writerArray[fromIndex] = null;
-//            if(writerArray[toIndex] == null) {
-//                return false;
-//            }
-//        }
-//        return true;
-//
-//    }
-
-//    private HandlerThread mThread = null;
-//    private Handler mThreadHandler = null;
-//    private void initThreadAndHandler(String threadName) {
-//        mThread = new HandlerThread(threadName);
-//        mThread.start();
-//        mThreadHandler = new Handler(mThread.getLooper());
-//    }
-
-	/*
-	public void appendLogWithNewlineAsync(int arrayIndex, String data) {
-		AppendLogTask task = new AppendLogTask(arrayIndex, data);
-		Log.d(debug_tag, "it's going to append data in index:" + arrayIndex + ",data:" + data);
-		mThreadHandler.post(task);
-	}
-	*/
-
-//	private class AppendLogTask implements Runnable {
-//		private String mData;
-//		private int mArrayIndex;
-//
-//		public AppendLogTask(int arrayIndex, String data) {
-//			mArrayIndex = arrayIndex;
-//			mData = data;
-//		}
-//
-//		@Override
-//		public void run() {
-//			try {
-//				writerArray[mArrayIndex].write(mData);
-//				writerArray[mArrayIndex].newLine();
-//			}
-//			catch(Exception e) {
-//				Toast.makeText(mContext, "寫入Log時發生錯誤" , Toast.LENGTH_LONG).show();
-//				Log.d(DEBUG_TAG,"exception in AppendLogTask,e:" + e.getLocalizedMessage());
-//				//Log.d(DEBUG_TAG,e.getLocalizedMessage());
-//			}
-//		}
-//
-//	}
-
-//	public void toLoadChineseCharsAsync(int grade) {
-//		mThreadHandler.post(new LoadCharsTask(grade));
-//	}
-
-//	public void toLoadChineseCharsSync(int grade) {
-//		(new LoadCharsTask(grade)).run();
-//	}
 
 }

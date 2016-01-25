@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce;
+package com.mhci.gripandtipforce.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;

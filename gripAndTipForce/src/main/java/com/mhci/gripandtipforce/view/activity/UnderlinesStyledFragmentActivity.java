@@ -1,9 +1,7 @@
-package com.mhci.gripandtipforce.activity;
+package com.mhci.gripandtipforce.view.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import com.mhci.gripandtipforce.model.ProjectConfig;
 import com.mhci.gripandtipforce.R;
 
 public class UnderlinesStyledFragmentActivity extends CustomizedBaseFragmentActivity{

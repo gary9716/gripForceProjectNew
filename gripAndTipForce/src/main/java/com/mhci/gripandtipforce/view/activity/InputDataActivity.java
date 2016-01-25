@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.activity;
+package com.mhci.gripandtipforce.view.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
 import com.mhci.gripandtipforce.R;
-import com.mhci.gripandtipforce.TxtFileManager;
+import com.mhci.gripandtipforce.model.utils.TxtFileManager;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
 public class InputDataActivity extends CustomizedBaseFragmentActivity {

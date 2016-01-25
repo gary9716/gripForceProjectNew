@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.utils;
+package com.mhci.gripandtipforce.model.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

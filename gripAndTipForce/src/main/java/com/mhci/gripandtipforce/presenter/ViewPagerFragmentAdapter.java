@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.mhci.gripandtipforce.fragment.ViewPagerFragment;
+import com.mhci.gripandtipforce.view.fragment.ViewPagerFragment;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
 public class ViewPagerFragmentAdapter extends FragmentPagerAdapter{

@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.utils;
+package com.mhci.gripandtipforce.model.utils;
 
 import android.util.DisplayMetrics;
 

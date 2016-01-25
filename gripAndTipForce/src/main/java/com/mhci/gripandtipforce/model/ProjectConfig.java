@@ -24,11 +24,12 @@ public class ProjectConfig {
 	public final static String debug_tag = "ProjectConfig";
 	public final static String projectName = "GripForce"; 
 	public static boolean useSystemBarHideAndShow = true;
-	public final static boolean useRealSDCard = true;
+	public final static boolean useRealSDCard = false;
 
 	public static final int numBytesPerSensorStrip = 19;
 	public static final int numSensorStrips = 5;
 	public static final int minSensorVal = 20;
+	public static final int maxCachedLogData = 5000;
 	public final static float inchPerCM = 0.393700787f;
 
 	public static final UUID UUIDForBT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -58,8 +59,12 @@ public class ProjectConfig {
 	public final static String btConnectingText = "連線中";
 	public final static String btConnectedText = "已連線";
 	public final static String btDisconnectedText = "已斷線";
-	
-    public final static int numOfGrades = 6;
+	public final static String btReconnectingText = "重新連線中";
+
+
+	public final static int numOfGrades = 6;
+
+	public static long startTimestampInMilliSec = 0;
 
 	public static String getRootDirPath() {
 		if(writableRootPath == null) {
@@ -352,8 +357,8 @@ public class ProjectConfig {
 		}
 	}
 
-	public static long getTimestamp(long startingTime) {
-		return System.currentTimeMillis() - startingTime;
+	public static long getTimestamp() {
+		return System.currentTimeMillis() - startTimestampInMilliSec;
 	}
 
 	private static void tryToWriteTempFile(File dir) throws Exception {

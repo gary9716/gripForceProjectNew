@@ -14,7 +14,8 @@ public class BTEvent {
         Disconnected,
         ConnectionFailed,
         EnablingFailed,
-        DeviceSelected
+        DeviceSelected,
+        Reconnecting
     }
 
     public Type type;

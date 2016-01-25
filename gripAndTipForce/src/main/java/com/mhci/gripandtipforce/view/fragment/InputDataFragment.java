@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.fragment;
+package com.mhci.gripandtipforce.view.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/input_data_fragment"
-        android:name="com.mhci.gripandtipforce.fragment.InputDataFragment"
+        android:name="com.mhci.gripandtipforce.view.fragment.InputDataFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/input_data_fragment"
-        android:name="com.mhci.gripandtipforce.fragment.ContainsViewPagerFragment"
+        android:name="com.mhci.gripandtipforce.view.fragment.ContainsViewPagerFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:layout_weight="1"/>

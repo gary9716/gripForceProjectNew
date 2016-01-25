@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce;
+package com.mhci.gripandtipforce.model.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
 import com.mhci.gripandtipforce.model.ProjectConfig;
-import com.mhci.gripandtipforce.utils.FileManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

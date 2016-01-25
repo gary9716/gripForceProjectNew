@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.activity;
+package com.mhci.gripandtipforce.view.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,18 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mhci.gripandtipforce.model.BTState;
 import com.mhci.gripandtipforce.model.BTEvent;
-import com.mhci.gripandtipforce.utils.BluetoothManager;
+import com.mhci.gripandtipforce.model.utils.BluetoothManager;
 import com.mhci.gripandtipforce.R;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
@@ -260,9 +256,4 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity {
 	private final static String toDisconnectText = "斷開連線";
 	private final static String cancelConnectingText = "取消連線";
 
-//	progressBarLoadingBTDevices = (ProgressBar)mPopwinView.findViewById(R.id.progressbar_loading_progress);
-//	progressBarLoadingBTDevices.setIndeterminate(true);
-//	progressBarLoadingBTDevices.setVisibility(View.GONE);
-
-	
 }

@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.fragment;
+package com.mhci.gripandtipforce.view.fragment;
 
 import com.mhci.gripandtipforce.R;
 import com.mhci.gripandtipforce.presenter.ViewPagerFragmentAdapter;

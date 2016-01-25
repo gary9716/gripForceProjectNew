@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce;
+package com.mhci.gripandtipforce.model.utils;
 
 import java.lang.reflect.Field;
 import android.content.Context;

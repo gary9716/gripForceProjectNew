@@ -20,14 +20,18 @@ public class FileDirInfo {
 		else {
 			mDirPath = dirPath;
 		}
-		
+
+
 		//test existence, if not existed, try to create the whole path
 		try {
-			//Log.d(debug_tag, "dir path:" + mDirPath);
+			Log.d(debug_tag, "dir path:" + mDirPath);
 			File dir = new File(mDirPath);
 			if(!dir.exists()) {
-				//Log.d(debug_tag, "create dir");
+				Log.d(debug_tag, "create dir");
 				dir.mkdirs(); //make the whole path, including parent directory
+			}
+			else {
+				Log.d(debug_tag, "dir already existed");
 			}
 			//Log.d(debug_tag, "done creating dir");
 		}

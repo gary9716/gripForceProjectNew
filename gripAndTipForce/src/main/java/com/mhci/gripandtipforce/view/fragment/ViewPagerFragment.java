@@ -1,4 +1,4 @@
-package com.mhci.gripandtipforce.fragment;
+package com.mhci.gripandtipforce.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mhci.gripandtipforce.activity.InputDataActivity;
+import com.mhci.gripandtipforce.view.activity.InputDataActivity;
 import com.mhci.gripandtipforce.R;
 
 public final class ViewPagerFragment extends Fragment {

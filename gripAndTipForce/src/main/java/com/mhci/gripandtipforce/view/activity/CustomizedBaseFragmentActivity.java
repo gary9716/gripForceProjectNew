@@ -1,12 +1,9 @@
-package com.mhci.gripandtipforce.activity;
+package com.mhci.gripandtipforce.view.activity;
 
 import com.mhci.gripandtipforce.R;
 import com.mhci.gripandtipforce.model.ProjectConfig;
-import com.mhci.gripandtipforce.utils.Utils;
-import com.stericson.RootShell.execution.Command;
-import com.stericson.RootTools.RootTools;
+import com.mhci.gripandtipforce.model.utils.Utils;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +12,6 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class CustomizedBaseFragmentActivity extends FragmentActivity{

@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.mhci.gripandtipforce.model.ProjectConfig;
-import com.mhci.gripandtipforce.utils.BluetoothManager;
-import com.mhci.gripandtipforce.utils.CustomizedExceptionHandler;
+import com.mhci.gripandtipforce.model.utils.BluetoothManager;
+import com.mhci.gripandtipforce.model.utils.CustomizedExceptionHandler;
 import com.nullwire.trace.ExceptionHandler;
 import com.parse.Parse;
 

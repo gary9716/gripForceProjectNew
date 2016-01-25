@@ -1,17 +1,17 @@
-package com.mhci.gripandtipforce.activity;
+package com.mhci.gripandtipforce.view.activity;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -22,7 +22,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Display;
@@ -37,17 +36,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mhci.gripandtipforce.service.BluetoothClientConnectService;
-import com.mhci.gripandtipforce.CharBoxesLayout;
+import com.mhci.gripandtipforce.model.BTEvent;
+import com.mhci.gripandtipforce.model.utils.BluetoothManager;
+import com.mhci.gripandtipforce.view.CharBoxesLayout;
 import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
-import com.mhci.gripandtipforce.ImgFileManager;
+import com.mhci.gripandtipforce.model.utils.ImgFileManager;
 import com.mhci.gripandtipforce.R;
-import com.mhci.gripandtipforce.TaskRunnerAndDisplayProgressDialogAsyncTask;
-import com.mhci.gripandtipforce.TxtFileManager;
-import com.mhci.gripandtipforce.UIState;
+import com.mhci.gripandtipforce.view.TaskRunnerAndDisplayProgressDialogAsyncTask;
+import com.mhci.gripandtipforce.model.utils.TxtFileManager;
+import com.mhci.gripandtipforce.model.UIState;
 import com.mhci.gripandtipforce.model.ProjectConfig;
-import com.mhci.gripandtipforce.utils.Utils;
+import com.mhci.gripandtipforce.model.utils.Utils;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.pen.Spen;
 import com.samsung.android.sdk.pen.SpenSettingEraserInfo;
@@ -60,7 +60,9 @@ import com.samsung.android.sdk.pen.engine.SpenTouchListener;
 import com.samsung.android.sdk.pen.pg.tool.SDKUtils;
 import com.samsung.android.sdk.pen.settingui.SpenSettingEraserLayout;
 import com.samsung.android.sdk.pen.settingui.SpenSettingPenLayout;
-import com.mhci.gripandtipforce.service.BluetoothClientConnectService.LocalBinder;
+
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+import de.greenrobot.event.EventBus;
 
 
 public class ExperimentActivity extends CustomizedBaseFragmentActivity {
@@ -132,9 +134,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private HandlerThread mWorkerThread;
 	private Handler mWorkerThreadHandler;
 	private TaskRunnerAndDisplayProgressDialogAsyncTask asyncTaskStartedViaBroadcast = null;
-	private long startingTimestampInMillis = 0;
 	private String[] cachedChars = null;
-	private Intent startBTClientServiceIntent = null;
 	private boolean isExperimentOver = false;
 	private boolean isOneLineSessionOver = false;
 	private boolean toChangeExperimentLayout = false;
@@ -143,6 +143,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private int additionalSetIndex = 0;
 	private String[] additionalSetName = null;
     private Canvas bmpCanvas;
+	private BluetoothManager mBTManager;
+	private EventBus eventBus;
+	private List<String>[] tipForceData;
+	private final int firstCharBoxIndex = 0;
+	private String currentDataSetName = null;
+	private IntentFilter filter;
 
 	//private int reqWidthInPx = 50;
 	//private int reqHeightInPx = 100;
@@ -157,31 +163,31 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(debug_tag, "Experiment started");
-
-		startingTimestampInMillis = System.currentTimeMillis();
-
 		mContext = this;
+		numCharBoxesInCol = 5;
+		numWritableCharBoxCols = 1;
+		numCharBoxesInAPage = numCharBoxesInCol * numWritableCharBoxCols;
+		oneLineSurfaceViewIndex = numCharBoxesInAPage;
+
+		ProjectConfig.startTimestampInMilliSec = System.currentTimeMillis();
+		eventBus = EventBus.getDefault();
+		mBTManager = BluetoothManager.getInstance();
 		uiThreadHandler = new Handler(getMainLooper());
 		packageName = getPackageName();
 		mRes = getResources();
 
-		numCharBoxesInCol = 5;
-		numWritableCharBoxCols = 1;
-
-		numCharBoxesInAPage = numCharBoxesInCol * numWritableCharBoxCols;
-		oneLineSurfaceViewIndex = numCharBoxesInAPage;
-
 		initThreadAndHandler();
 
 		/* preOrPostExperimentView */
-		mInflater = LayoutInflater.from(mContext);
 
+		mInflater = LayoutInflater.from(mContext);
 		mPreOrPostExperimentView = mInflater.inflate(R.layout.activity_start_and_end, null);
-		mPreOrPostInfo = (TextView)mPreOrPostExperimentView.findViewById(R.id.text_pre_or_post_info);
-		mPreOrPostNextPageButton = (Button)mPreOrPostExperimentView.findViewById(R.id.button_experiment_next_step);
+		mPreOrPostInfo = (TextView) mPreOrPostExperimentView.findViewById(R.id.text_pre_or_post_info);
+		mPreOrPostNextPageButton = (Button) mPreOrPostExperimentView.findViewById(R.id.button_experiment_next_step);
 		mPreOrPostNextPageButton.setOnClickListener(mBtnOnClickListener);
-		mBTStateInPreAndPostView = (TextView)mPreOrPostExperimentView.findViewById(R.id.text_bt_state);
-		mBTStateInPreAndPostView.setText("未連接");
+
+		mBTStateInPreAndPostView = (TextView) mPreOrPostExperimentView.findViewById(R.id.text_bt_state);
+		setBTStateText(mBTStateInPreAndPostView);
 
 		preOrPostInterfaceState = UIState.preExperimentTrial;
 
@@ -203,65 +209,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				"下一個畫面需要些讀取時間,請稍候")).execute();
 	}
 
-	private View.OnClickListener mBtnOnClickListener = new View.OnClickListener() {
-		private void setSPenToolActionWithAllCanvases(int toolAction) {
-
-			for(int i = 0;i < numWritableCharBoxCols;i++) { 
-				for(int j = 0;j < numCharBoxesInCol;j++) {
-					if(mCharBoxes[i][j].isActivated()) {
-						mCharBoxes[i][j].setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
-					}
-				}
-			}
-			return;
-		}
-
-		@Override
-			public void onClick(View view) {
-
-				int id = view.getId();
-				isToCleanMode = false;
-				if(id == R.id.penBtn) {
-					setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_STROKE);
-					selectButton(mPenBtn);
-				}
-				else if(id == R.id.eraserBtn) {
-					setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_ERASER);
-					selectButton(mEraserBtn);
-				}
-				else if(id == R.id.cleanBtn) {
-					isToCleanMode = true;
-					setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_NONE);
-					selectButton(mCleanBtn);
-				}
-				else if(id == R.id.button_experiment_next_step) {
-					if(preOrPostInterfaceState == UIState.preExperimentTrial) {
-						if(isExperimentOver) {
-							//the test should be over now.
-							return;
-						}
-
-						if(toChangeExperimentLayout) {
-							changeExperimentLayout(layoutChangeTo);
-							toChangeExperimentLayout = false;
-						}
-
-						setContentView(mExperimentView); //switch to experiment view
-						
-						preOrPostInterfaceState = UIState.postExperimentTrial;
-					}
-					else if(preOrPostInterfaceState == UIState.postExperimentTrial) {
-						showPreExperimentView();
-						preOrPostInterfaceState = UIState.preExperimentTrial;
-					}
-				}
-				else if(id == R.id.nextPageBtn) { //button on experiment view
-					nextPage();
-				}
-
-			}
-	};
-
+	//TODO: fix with EventBus
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -270,95 +218,14 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			if(action.equals(Action_update_chars)) {
 				updateExChars(intent.getStringArrayExtra(Key_ExChars));
 			}
-			else if(action.equals(BluetoothClientConnectService.Msg_update_info)) {
-				Bundle bundle = intent.getBundleExtra(BluetoothClientConnectService.MsgBundleKey);
-				if(bundle.getString(BluetoothClientConnectService.Key_Info_identifier).equals(BluetoothClientConnectService.Info_dataReceivingConnection)) {
-					String msgToShow = bundle.getString(BluetoothClientConnectService.Key_Info_content);
-					//Toast.makeText(mContext, "藍芽：" + msgToShow, Toast.LENGTH_LONG).show();
-					mBTState.setText(msgToShow);
-					mBTStateInPreAndPostView.setText(msgToShow);
-				}
-			}
-			else if(action.equals(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask)) {
-				if(asyncTaskStartedViaBroadcast == null) {
-					asyncTaskStartedViaBroadcast = new TaskRunnerAndDisplayProgressDialogAsyncTask(
-							mContext, 
-							null, 
-							null, 
-							intent.getStringExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_title),
-							intent.getStringExtra(TaskRunnerAndDisplayProgressDialogAsyncTask.Key_msg));
-					asyncTaskStartedViaBroadcast.execute();
-				}
-			}
-			else if(action.equals(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask)) {
-				if(asyncTaskStartedViaBroadcast != null) {
-					asyncTaskStartedViaBroadcast.cancel(true);
-					asyncTaskStartedViaBroadcast = null;
-				}
-			}
-
 		}
 	};
 
-	private class CustomizedSpenTouchListener implements SpenTouchListener{
-		private final static char delimiter = ',';
-		private int mCharboxIndex = -1;
-		//private SpenSurfaceView mSurfaceView = null;
-		private StringBuffer stringBuffer = new StringBuffer();
-		public CustomizedSpenTouchListener(int charboxIndex, SpenSurfaceView surfaceView) {
-			mCharboxIndex = charboxIndex;
-			//mSurfaceView = surfaceView;
-		}
-
-		@Override
-			public boolean onTouch(View view, MotionEvent event) {
-				if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS && mPenBtn.isSelected()) {
-					//Log.d(debug_tag, event.getPressure() + "," + event.getX() + "," + event.getY() + "," + (System.currentTimeMillis() - fixedDateInMillis));
-					//mPenTipInfo.setText("it's pen");
-					stringBuffer.setLength(0); //clean buffer
-					stringBuffer.append(ProjectConfig.getTimestamp(startingTimestampInMillis));
-					stringBuffer.append(delimiter);
-					stringBuffer.append(event.getX());
-					stringBuffer.append(delimiter);
-					stringBuffer.append(event.getY());
-					stringBuffer.append(delimiter);
-					stringBuffer.append(event.getPressure());
-					//stringBuffer.append(Float.toString(event.getPressure()));
-					//stringBuffer.append(String.format("%s",event.getPressure()));
-					//stringBuffer.append(BigDecimal.valueOf(event.getPressure()).toString());
-					txtFileManager.appendLogWithNewlineSync(mCharboxIndex, stringBuffer.toString());
-				}
-				/*
-				else {
-					mPenTipInfo.setText("it's finger");
-				}
-				*/
-
-				return false;
-			}
-
+	private void appendTipForceLogAsync(int charBoxIndex) {
+		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tipForceData[charBoxIndex]));
+		tipForceData[charBoxIndex] = new LinkedList<>();
 	}
 
-//	private boolean isLoadingChars = false;
-//	private void loadExCharsFromFile(int grade) {
-//		if(!isLoadingChars) {
-//			cachedChars = null;
-//			isLoadingChars = true;
-//			txtFileManager.toLoadChineseCharsAsync(grade);
-//		}
-//	}
-
-	private void resetExCharsAndCharBoxes() {
-		for(int i = 0;i < numWritableCharBoxCols;i++) {
-			for(int j = 0;j < numCharBoxesInCol;j++) {
-				mExampleCharsTextView[i][j].setText(null);
-				if(mCharBoxes[i][j] != null) {
-					cleanSurfacView(mCharBoxes[i][j]);
-				}
-			}
-		}
-	}
-	
 	public void updateExChars(String[] exChars) {
 		String[] charsUsedForUpdate = null;
 
@@ -411,6 +278,11 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			int numImagesSaved = 0;
 			for (int i = 0; i < numWritableCharBoxCols; i++) {
 				for (int j = 0; j < numCharBoxesInCol && numImagesSaved < numImagesToSave; j++) {
+					int charBoxIndex = i * numCharBoxesInCol + j;
+					if(tipForceData[charBoxIndex].size() > 0) {
+						appendTipForceLogAsync(charBoxIndex);
+					}
+
 					captureSpenSurfaceView(mCharBoxes[i][j],
 							               ProjectConfig.getGeneratingImgFileName(
                                                    ProjectConfig.writingImgPrefix,
@@ -455,7 +327,11 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
+			if(tipForceData[0].size() > 0) {
+				appendTipForceLogAsync(0);
+			}
 			txtFileManager.closeFile(0);
+
 			captureSpenSurfaceView(mOneLine, ProjectConfig.getGeneratingImgFileName(
                     ProjectConfig.writingImgPrefix,
                     mUserID,
@@ -476,12 +352,14 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 		(new TaskRunnerAndDisplayProgressDialogAsyncTask(
 				mContext,
-				new CreateOrOpenLogFileTask(
-                        ProjectConfig.tipForceLogPrefix,
-                        currentDataSetName,
-                        logIndex,
-                        firstCharBoxIndex,
-                        numLogsToLoadNow),
+				txtFileManager.getCreateOrOpenCharLogFileTask(
+						ProjectConfig.tipForceLogPrefix,
+						mUserID,
+						currentDataSetName,
+						cachedChars,
+						logIndex,
+						firstCharBoxIndex,
+						numCharBoxesInAPage),
                 null)).execute();
 
 	}
@@ -504,9 +382,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 		}
 	}
-
-	private final int firstCharBoxIndex = 0;
-	private String currentDataSetName = null;
 
 	private void prepareForNextTestingSet() {
 		int logIndex = 0;
@@ -553,12 +428,15 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			return;
 		}
 
-		taskList.add(new CreateOrOpenLogFileTask(
+		taskList.add(txtFileManager.getCreateOrOpenCharLogFileTask(
 				ProjectConfig.tipForceLogPrefix,
+				mUserID,
 				currentDataSetName,
+				cachedChars,
 				logIndex,
 				firstCharBoxIndex,
 				numCharBoxesInAPage));
+
 
 		Runnable[] taskArray = new Runnable[taskList.size()];
 
@@ -566,48 +444,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				mContext,
 				taskList.toArray(taskArray),
 				null)).execute();
-
-//        for(Runnable task : taskList) {
-//            mWorkerThreadHandler.post(task);
-//        }
-
-	}
-
-	private class CreateOrOpenLogFileTask implements Runnable {
-
-		//charIndex is the order of certain char in Example Chars file
-		//charBoxIndex is the order of certain char on the experiment view
-		int mLogIndex;
-		int mCharBoxIndex;
-		int mNumFilesToCreateOrOpen;
-		String mFileNamePrefix = null;
-
-		public CreateOrOpenLogFileTask(String logType,
-									   String dataSetName,
-									   int logIndex,
-									   int charBoxIndex,
-									   int numFilesToCreateOrOpen) {
-
-			mFileNamePrefix = logType + "_" + mUserID + "_" + dataSetName + "_";
-			mLogIndex = logIndex;
-			mCharBoxIndex = charBoxIndex;
-			mNumFilesToCreateOrOpen = numFilesToCreateOrOpen;
-		}
-
-		@Override
-		public void run() {
-			int numLogsToLoad = mNumFilesToCreateOrOpen;
-			if(cachedChars != null) {
-				if(cachedChars.length - mLogIndex < numLogsToLoad) {
-					numLogsToLoad = cachedChars.length - mLogIndex;
-				}
-			}
-			for(int i = 0;i < numLogsToLoad;i++) {
-				txtFileManager.createOrOpenLogFileSync(
-						mFileNamePrefix + (mLogIndex + i + 1) + ProjectConfig.txtFileExtension,
-						mCharBoxIndex + i);
-			}
-		}
 
 	}
 
@@ -624,30 +460,22 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		else {
 			mPreOrPostNextPageButton.setVisibility(View.GONE);
 			mPreOrPostInfo.setText("評量到此結束，感謝你的參與");
-			endTheAppAfterCertainDuration(7000);
+			endTheApp();
 		}
 		setContentView(mPreOrPostExperimentView);
 	}
 
-	private BluetoothClientConnectService btClientService = null;
-	
-	private ServiceConnection serviceConnection = new ServiceConnection() {
-		
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			btClientService = null;
-			Log.d(debug_tag, "btService disconnected");
+	private void setBTStateText(TextView btStateText) {
+		if(mBTManager.getBTState() == BluetoothState.STATE_CONNECTED) {
+			btStateText.setText(ProjectConfig.btConnectedText);
 		}
-		
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			LocalBinder binder = (LocalBinder)service;
-			btClientService = binder.getService();
-			btClientService.setStoringDataEnabled(true);
-			btClientService.setStartingTimestamp(startingTimestampInMillis);
-			Log.d(debug_tag, "btService connected");
+		else if(mBTManager.getBTState() == BluetoothState.STATE_CONNECTING) {
+			btStateText.setText(ProjectConfig.btConnectingText);
 		}
-	};
+		else {
+			btStateText.setText(ProjectConfig.btDisconnectedText);
+		}
+	}
 
 	private final int charBoxHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * 2.1f);
 	private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics,ProjectConfig.inchPerCM * 16.1f);
@@ -656,7 +484,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	private void changeExperimentLayout(CharBoxesLayout layoutSetting) {
 		expLayoutSetting = layoutSetting;
-		//ViewGroup.LayoutParams writableCharBox_LP = mWritableCharBoxContainers[0][0].getLayoutParams();
 
 		if(expLayoutSetting == CharBoxesLayout.SeparateChars) {
 			otherUIContainer.setVisibility(View.GONE);
@@ -686,7 +513,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			charGroupsContainer = new LinearLayout(mContext);
 			charGroupsContainer.setOrientation(LinearLayout.VERTICAL);
-            //charGroupsContainer.setGravity(Gravity.CENTER_VERTICAL);
 
 			RelativeLayout.LayoutParams charGroupsContainerLayoutParams = new RelativeLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,  //width
@@ -845,40 +671,40 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				mWritableCharBoxNames[i] = "WritableChar" + (i + 1);
 			}
 
+			//TODO: use EventBus
 			mLBCManager = LocalBroadcastManager.getInstance(mContext);
-			IntentFilter filter = new IntentFilter(Action_update_chars);
-			filter.addAction(BluetoothClientConnectService.Msg_update_info);
-			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
-			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
-			mLBCManager.registerReceiver(broadcastReceiver, filter);
+			filter = new IntentFilter(Action_update_chars);
+//			filter.addAction(BluetoothClientConnectService.Msg_update_info);
+//			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.startAsyncTask);
+//			filter.addAction(TaskRunnerAndDisplayProgressDialogAsyncTask.stopAsyncTask);
 
+			/* Preference and Other Manager Settings */
 			additionalSetName = ProjectConfig.getAdditionalSetFileName();
 
 			SharedPreferences userInfoPreference = mContext.getSharedPreferences(ProjectConfig.Key_Preference_UserInfo, Context.MODE_PRIVATE);
-
 			if(userInfoPreference != null) {
 				mUserGrade = (int)userInfoPreference.getLong(ProjectConfig.Key_Preference_UserGrade, 1);
 				mUserDominantHand = userInfoPreference.getString(ProjectConfig.Key_Preference_UserDominantHand, ProjectConfig.rightHand);
 				mUserID = userInfoPreference.getString(ProjectConfig.Key_Preference_UserID, ProjectConfig.defaultUserID);
-				startBTClientServiceIntent = new Intent(mContext, BluetoothClientConnectService.class);
-				startBTClientServiceIntent.setAction(BluetoothClientConnectService.Action_start_receiving_data);
-				startBTClientServiceIntent.putExtra(BluetoothClientConnectService.DeviceAddrKey, userInfoPreference.getString(ProjectConfig.Key_Preference_LastSelectedBTAddress, null));
-				Log.d(debug_tag,"bt addr:" + userInfoPreference.getString(ProjectConfig.Key_Preference_LastSelectedBTAddress, null));
-				bindService(startBTClientServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 			}
 
+			mBTManager.startLogging(mUserID);
 			FileDirInfo dirInfo = new FileDirInfo(FileType.GeneratingImage, ProjectConfig.getDirpathByID(mUserID), null);
 			genImgFileManager = new ImgFileManager(dirInfo, mContext);
 
 			//instead of using default path, use the path specified above(ProjectConfig.getDirpathByID(mUserID))
 			dirInfo.setFileType(FileType.Log, false);
-			//the rest of space is used for preloading
-			dirInfo.setOtherInfo(String.valueOf(numCharBoxesInCol * numWritableCharBoxCols * 2));
+			dirInfo.setOtherInfo(String.valueOf(numCharBoxesInCol * numWritableCharBoxCols));
 			txtFileManager = new TxtFileManager(dirInfo, mContext);
 
 			dirInfo.setFileType(FileType.TemplateImage, true);
 			dirInfo.setOtherInfo(null);
 			templateImgFileManager = new ImgFileManager(dirInfo, mContext);
+
+			tipForceData = new List[numCharBoxesInAPage];
+			for(int i = 0;i < numCharBoxesInAPage;i++) {
+				tipForceData[i] = new LinkedList<>();
+			}
 
 			/* Experiment View */
 
@@ -904,8 +730,9 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			selectButton(mPenBtn);
 
+			//TODO:set the two bt states together in EventBus handler
 			mBTState = (TextView)mExperimentView.findViewById(R.id.text_bt_state);
-			mBTState.setText("未連接");
+			setBTStateText(mBTState);
 
 			/* ExperimentView */
 
@@ -915,6 +742,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			//do SpenSetUp-Related Work at last
 			/* Spen Dependent Part Start */
+
+			Log.d(debug_tag,"Spen Start init");
 
 			// Initialize Spen
 			boolean isSpenFeatureEnabled = false;
@@ -931,7 +760,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				e1.printStackTrace();
 				finish();
 			}
-			initSettingInfo2();
+			initSettingInfo();
 
 			// Get the dimension of the device screen.
 			Display display = getWindowManager().getDefaultDisplay();
@@ -1039,6 +868,117 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	}
 
+	private View.OnClickListener mBtnOnClickListener = new View.OnClickListener() {
+		private void setSPenToolActionWithAllCanvases(int toolAction) {
+
+			for(int i = 0;i < numWritableCharBoxCols;i++) {
+				for(int j = 0;j < numCharBoxesInCol;j++) {
+					if(mCharBoxes[i][j].isActivated()) {
+						mCharBoxes[i][j].setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
+					}
+				}
+			}
+			return;
+		}
+
+		@Override
+		public void onClick(View view) {
+
+			int id = view.getId();
+			isToCleanMode = false;
+			if(id == R.id.penBtn) {
+				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_STROKE);
+				selectButton(mPenBtn);
+			}
+			else if(id == R.id.eraserBtn) {
+				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_ERASER);
+				selectButton(mEraserBtn);
+			}
+			else if(id == R.id.cleanBtn) {
+				isToCleanMode = true;
+				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_NONE);
+				selectButton(mCleanBtn);
+			}
+			else if(id == R.id.button_experiment_next_step) {
+				if(preOrPostInterfaceState == UIState.preExperimentTrial) {
+					if(isExperimentOver) {
+						//the test should be over now.
+						return;
+					}
+
+					if(toChangeExperimentLayout) {
+						changeExperimentLayout(layoutChangeTo);
+						toChangeExperimentLayout = false;
+					}
+
+					setContentView(mExperimentView); //switch to experiment view
+
+					preOrPostInterfaceState = UIState.postExperimentTrial;
+				}
+				else if(preOrPostInterfaceState == UIState.postExperimentTrial) {
+					showPreExperimentView();
+					preOrPostInterfaceState = UIState.preExperimentTrial;
+				}
+			}
+			else if(id == R.id.nextPageBtn) { //button on experiment view
+				nextPage();
+			}
+
+		}
+	};
+
+	private class CustomizedSpenTouchListener implements SpenTouchListener{
+		private final static char delimiter = ',';
+		private int mCharboxIndex = -1;
+		//private SpenSurfaceView mSurfaceView = null;
+		private StringBuffer stringBuffer = new StringBuffer();
+
+		public CustomizedSpenTouchListener(int charboxIndex, SpenSurfaceView surfaceView) {
+			mCharboxIndex = charboxIndex;
+			//mSurfaceView = surfaceView;
+		}
+
+		@Override
+		public boolean onTouch(View view, MotionEvent event) {
+			if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS && mPenBtn.isSelected()) {
+				//Log.d(debug_tag, event.getPressure() + "," + event.getX() + "," + event.getY() + "," + (System.currentTimeMillis() - fixedDateInMillis));
+				//mPenTipInfo.setText("it's pen");
+				stringBuffer.setLength(0); //clean buffer
+				stringBuffer.append(ProjectConfig.getTimestamp());
+				stringBuffer.append(delimiter);
+				stringBuffer.append(event.getX());
+				stringBuffer.append(delimiter);
+				stringBuffer.append(event.getY());
+				stringBuffer.append(delimiter);
+				stringBuffer.append(event.getPressure());
+				//stringBuffer.append(Float.toString(event.getPressure()));
+				//stringBuffer.append(String.format("%s",event.getPressure()));
+				//stringBuffer.append(BigDecimal.valueOf(event.getPressure()).toString());
+
+//				txtFileManager.appendLogWithNewlineSync(mCharboxIndex, stringBuffer.toString());
+				tipForceData[mCharboxIndex].add(stringBuffer.toString());
+				if(tipForceData[mCharboxIndex].size() >= ProjectConfig.maxCachedLogData) {
+					appendTipForceLogAsync(mCharboxIndex);
+				}
+
+			}
+
+			return false;
+		}
+
+	}
+
+	private void resetExCharsAndCharBoxes() {
+		for(int i = 0;i < numWritableCharBoxCols;i++) {
+			for(int j = 0;j < numCharBoxesInCol;j++) {
+				mExampleCharsTextView[i][j].setText(null);
+				if(mCharBoxes[i][j] != null) {
+					cleanSurfacView(mCharBoxes[i][j]);
+				}
+			}
+		}
+	}
+
 	private void captureExampleTextView(TextView textView, String fileName) {
         Bitmap bufferBMP = Bitmap.createBitmap(charBoxWidth, charBoxHeight, Bitmap.Config.ARGB_8888);
         bmpCanvas.setBitmap(bufferBMP);
@@ -1051,42 +991,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		genImgFileManager.saveBMP(imgBitmap, fileName, true);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		
-		if(btClientService != null) {
-			btClientService.setStoringDataEnabled(false);
-			btClientService.stopSelf();
-		}
-		
-		if(mLBCManager != null) {
-			mLBCManager.unregisterReceiver(broadcastReceiver);
-		}
-
-		if (mPenSettingView != null) {
-			mPenSettingView.close();
-		}
-		if (mEraserSettingView != null) {
-			mEraserSettingView.close();
-		}
-
-		if (mSpenNoteDoc != null) {
-			try {
-				mSpenNoteDoc.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			mSpenNoteDoc = null;
-		}
-	};
-
 	private View findViewByStr(View viewToSearchIn, String name) {
 		int resId = mRes.getIdentifier(name, "id", packageName);
 		return viewToSearchIn.findViewById(resId);
 	}
 
-	private void initSettingInfo2() {
+	private void initSettingInfo() {
 
 		// Initialize Pen settings
 		penInfo = new SpenSettingPenInfo();
@@ -1173,6 +1083,70 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private void setNextPageButtonClickable(boolean enable) {
 		mNextPageBtn.setClickable(enable);
 	}
-	
-	
+
+	public void onEvent(BTEvent event) {
+		setRelatedUI(event);
+	}
+
+	private void setRelatedUI(BTEvent event) {
+
+		if(event.type == BTEvent.Type.Connecting) {
+			mBTState.setText(ProjectConfig.btConnectingText);
+			mBTStateInPreAndPostView.setText(ProjectConfig.btConnectingText);
+		}
+		else if(event.type == BTEvent.Type.Connected) {
+			mBTState.setText(ProjectConfig.btConnectedText);
+			mBTStateInPreAndPostView.setText(ProjectConfig.btConnectedText);
+		}
+		else if(event.type == BTEvent.Type.Disconnected) {
+			mBTState.setText(ProjectConfig.btDisconnectedText);
+			mBTStateInPreAndPostView.setText(ProjectConfig.btDisconnectedText);
+		}
+		else if(event.type == BTEvent.Type.Reconnecting) {
+			mBTState.setText(ProjectConfig.btReconnectingText);
+			mBTStateInPreAndPostView.setText(ProjectConfig.btReconnectingText);
+		}
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		eventBus.register(this);
+		mLBCManager.registerReceiver(broadcastReceiver, filter);
+
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		eventBus.unregister(this);
+		mLBCManager.unregisterReceiver(broadcastReceiver);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (mPenSettingView != null) {
+			mPenSettingView.close();
+		}
+		if (mEraserSettingView != null) {
+			mEraserSettingView.close();
+		}
+
+		if (mSpenNoteDoc != null) {
+			try {
+				mSpenNoteDoc.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			mSpenNoteDoc = null;
+		}
+	}
+
+	private void endTheApp() {
+		mBTManager.endLogging();
+		endTheAppAfterCertainDuration(7000);
+	}
 }
