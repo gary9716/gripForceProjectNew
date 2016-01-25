@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mhci.gripandtipforce.view.activity.ExperimentActivity;
 import com.mhci.gripandtipforce.model.FileDirInfo;
@@ -62,7 +61,7 @@ public class TxtFileManager extends FileManager {
 	
 	private File createOrOpenLogFile(String fileName) {
 		if(mFileDir == null) {
-			Toast.makeText(mContext, "txtDir is null ,failed to create log", Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, "txtDir is null ,failed to create log", Toast.LENGTH_LONG).show();
 			return null;
 		}
 
@@ -73,7 +72,7 @@ public class TxtFileManager extends FileManager {
 			txtFile = new File(mFileDir, fileName);
 			if(!txtFile.exists()) {
 				if(!txtFile.createNewFile()) {
-					Toast.makeText(mContext, "creating txt file failed", Toast.LENGTH_LONG).show();
+//					Toast.makeText(mContext, "creating txt file failed", Toast.LENGTH_LONG).show();
 					return null;
 				}
 			}
@@ -81,7 +80,7 @@ public class TxtFileManager extends FileManager {
 		catch(Exception e) {
 			txtFile = null;
 			Log.d(debug_tag,e.getLocalizedMessage());
-			Toast.makeText(mContext, "creating or openning txt file failed", Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, "creating or openning txt file failed", Toast.LENGTH_LONG).show();
 		}
 		
 		return txtFile;
@@ -205,7 +204,7 @@ public class TxtFileManager extends FileManager {
 			writer.newLine();
 		}
 		catch(Exception e) {
-			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
 			Log.d(debug_tag,"exception in AppendLogTask,e:" + e.getLocalizedMessage());
 		}
 		//Log.d(debug_tag,"done append log");
@@ -272,11 +271,11 @@ public class TxtFileManager extends FileManager {
 		}
 
 		if(exampleCharsFile == null || !exampleCharsFile.exists()) {
-			Toast.makeText(mContext, "找不到" + fileName + ",請再次確認檔案已放到正確的資料夾底下" , Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, "找不到" + fileName + ",請再次確認檔案已放到正確的資料夾底下" , Toast.LENGTH_LONG).show();
 			return null;
 		}
 		else if(!exampleCharsFile.canRead()){
-			Toast.makeText(mContext, "無法讀取" + fileName + ",請再次確認無與電腦連接USB" , Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, "無法讀取" + fileName + ",請再次確認無與電腦連接USB" , Toast.LENGTH_LONG).show();
 			return null;
 		}
 
@@ -294,11 +293,9 @@ public class TxtFileManager extends FileManager {
 		}
 
 		if(exampleCharsFile == null || !exampleCharsFile.exists()) {
-			Toast.makeText(mContext, "找不到" + grade + "年級的範例文字,請再次確認檔案已放到正確的資料夾底下" , Toast.LENGTH_LONG).show();
 			return null;
 		}
-		else if(!exampleCharsFile.canRead()){
-			Toast.makeText(mContext, "無法讀取" + grade + "年級的範例文字,請再次確認無與電腦連接USB" , Toast.LENGTH_LONG).show();
+		else if(!exampleCharsFile.canRead()) {
 			return null;
 		}
 
@@ -323,7 +320,7 @@ public class TxtFileManager extends FileManager {
 			}
 		}
 		catch(Exception e) {
-			Toast.makeText(mContext, exceptionMessage , Toast.LENGTH_LONG).show();
+//			Toast.makeText(mContext, exceptionMessage , Toast.LENGTH_LONG).show();
 			Log.d(DEBUG_TAG, e.getLocalizedMessage());
 		}
 		finally {
