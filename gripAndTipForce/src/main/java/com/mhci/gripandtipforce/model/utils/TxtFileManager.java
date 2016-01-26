@@ -19,8 +19,6 @@ import com.mhci.gripandtipforce.model.FileDirInfo;
 import com.mhci.gripandtipforce.model.FileType;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
-import cn.trinea.android.common.util.FileUtils;
-
 public class TxtFileManager extends FileManager {
 	private final static String DEBUG_TAG = "TxtFileManager";
 	private File mFileDir = null;
@@ -213,8 +211,20 @@ public class TxtFileManager extends FileManager {
 	}
 
 	public void appendLogs(int arrayIndex, List<String> linesOfData) {
-		File logFileToWrite = logFiles[arrayIndex];
-		FileUtils.writeFile(logFileToWrite.getAbsolutePath(), linesOfData, true);
+		BufferedWriter writer = null;
+		try {
+			writer = writerArray[arrayIndex];
+			for(String data : linesOfData) {
+				writer.write(data);
+				writer.newLine();
+			}
+			writer.flush();
+		}
+		catch(Exception e) {
+//			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
+			Log.d(debug_tag,"exception in AppendLogTask,e:" + e.getLocalizedMessage());
+		}
+
 	}
 
 

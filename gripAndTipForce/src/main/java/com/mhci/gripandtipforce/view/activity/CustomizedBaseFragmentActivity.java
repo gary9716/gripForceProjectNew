@@ -2,7 +2,9 @@ package com.mhci.gripandtipforce.view.activity;
 
 import com.mhci.gripandtipforce.R;
 import com.mhci.gripandtipforce.model.ProjectConfig;
+import com.mhci.gripandtipforce.model.utils.CustomizedExceptionHandler;
 import com.mhci.gripandtipforce.model.utils.Utils;
+import com.nullwire.trace.ExceptionHandler;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ public class CustomizedBaseFragmentActivity extends FragmentActivity{
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
+		ExceptionHandler.register(this, new CustomizedExceptionHandler(), false);
 	}
 	
 	@Override

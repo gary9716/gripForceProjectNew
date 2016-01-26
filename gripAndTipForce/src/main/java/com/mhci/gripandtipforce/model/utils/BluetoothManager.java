@@ -69,8 +69,9 @@ public class BluetoothManager{
 			uiThreadHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					sharedEvent.type = BTEvent.Type.Reconnecting;
-					eventBus.post(sharedEvent);
+					BTEvent btEvent = new BTEvent();
+					btEvent.type = BTEvent.Type.Reconnecting;
+					eventBus.post(btEvent);
 					connect(lastConnectedBTAddr);
 				}
 			},2000);
@@ -101,6 +102,7 @@ public class BluetoothManager{
 		if(cachedLogs.size() > 0) {
 			txtFileManager.appendLogs(logFileIndex, cachedLogs);
 		}
+		txtFileManager.closeFile(logFileIndex);
 	}
 
 	public void disconnect() {
@@ -108,8 +110,9 @@ public class BluetoothManager{
 	}
 
 	public void connect(String addr) {
+		sharedEvent = new BTEvent();
 		sharedEvent.type = BTEvent.Type.Connecting;
-		sendBTEventInMainThread();
+		sendBTEventInMainThread(sharedEvent);
 		btSPP.connect(addr);
 	}
 
@@ -190,6 +193,7 @@ public class BluetoothManager{
 		btSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
 			@Override
 			public void onDeviceConnected(String name, String address) {
+				sharedEvent = new BTEvent();
 				sharedEvent.type = BTEvent.Type.Connected;
 				sharedEvent.deviceAddr = address;
 				lastConnectedBTAddr = address;
@@ -199,6 +203,7 @@ public class BluetoothManager{
 
 			@Override
 			public void onDeviceDisconnected() {
+				sharedEvent = new BTEvent();
 				sharedEvent.type = BTEvent.Type.Disconnected;
 				eventBus.post(sharedEvent);
 				reconnectIfAllowed();
@@ -206,6 +211,7 @@ public class BluetoothManager{
 
 			@Override
 			public void onDeviceConnectionFailed() {
+				sharedEvent = new BTEvent();
 				sharedEvent.type = BTEvent.Type.ConnectionFailed;
 				eventBus.post(sharedEvent);
 				reconnectIfAllowed();
@@ -214,7 +220,6 @@ public class BluetoothManager{
 
 		remainedBytesToCollect = 0;
 
-		//TODO: add data received listener and do the IO part;
 		btSPP.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
 			@Override
 			public void onDataReceived(byte[] data, String message) {
@@ -290,11 +295,13 @@ public class BluetoothManager{
 		});
 	}
 
-	private void sendBTEventInMainThread() {
+	private void sendBTEventInMainThread(BTEvent btEvent) {
+		final BTEvent localEvent = btEvent;
 		uiThreadHandler.post(new Runnable() {
 			@Override
 			public void run() {
-				eventBus.post(sharedEvent);
+				Log.d(DEBUG_TAG, "send BT event in Main thread");
+				eventBus.post(localEvent);
 			}
 		});
 	}
@@ -343,19 +350,20 @@ public class BluetoothManager{
 	public void decodeActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
 			if(resultCode == Activity.RESULT_OK) {
+				sharedEvent = new BTEvent();
 				sharedEvent.type = BTEvent.Type.DeviceSelected;
 				sharedEvent.deviceAddr = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS);
 				sharedEvent.deviceName = getDeviceName(sharedEvent.deviceAddr);
-				sendBTEventInMainThread();
+				sendBTEventInMainThread(sharedEvent);
 				connect(sharedEvent.deviceAddr);
 			}
 		} else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
 			if(resultCode == Activity.RESULT_OK) {
 				initBTSPPService();
 			} else {
-				sharedEvent = new BTEvent();
-				sharedEvent.type = BTEvent.Type.EnablingFailed;
-				eventBus.post(sharedEvent);
+				BTEvent btEvent = new BTEvent();
+				btEvent.type = BTEvent.Type.EnablingFailed;
+				eventBus.post(btEvent);
 			}
 		}
 	}

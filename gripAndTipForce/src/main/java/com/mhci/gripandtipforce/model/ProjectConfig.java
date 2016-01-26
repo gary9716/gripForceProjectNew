@@ -31,6 +31,10 @@ public class ProjectConfig {
 	public static final int minSensorVal = 20;
 	public static final int maxCachedLogData = 200;
 	public final static float inchPerCM = 0.393700787f;
+	public final static float squareCharBoxSizeInCm = 2.1f;
+	public final static float oneLineCharBoxSizeInCm = 16.1f;
+	public final static float exCharSizeToCharBoxRatio = 0.7f;
+	public final static float oneLineCharBoxFactor = 2f;
 
 	public static final UUID UUIDForBT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	public static final String txtFileExtension = ".txt";
@@ -59,6 +63,7 @@ public class ProjectConfig {
 	public final static String btConnectingText = "連線中";
 	public final static String btConnectedText = "已連線";
 	public final static String btDisconnectedText = "已斷線";
+	public final static String btConnectionFailedText = "連線失敗";
 	public final static String btReconnectingText = "重新連線中";
 
 
@@ -120,7 +125,7 @@ public class ProjectConfig {
 			Log.d(debug_tag,"currently use external storage");
 		}
 		else {
-			Toast.makeText(context, "使用內部儲存空間,\n需透過平板上的設定才能從電腦存取", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "使用內部儲存空間", Toast.LENGTH_LONG).show();
 			Log.d(debug_tag,"currently use internal storage");
 		}
 

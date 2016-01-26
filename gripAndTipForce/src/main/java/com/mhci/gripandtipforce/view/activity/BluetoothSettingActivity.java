@@ -235,20 +235,30 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity {
 		if(event.type == BTEvent.Type.Connecting) {
 			mCurrentBTState.setText(ProjectConfig.btConnectingText);
 			btConnectButton.setText(cancelConnectingText);
+			btConnectButton.setVisibility(View.INVISIBLE);
 		}
 		else if(event.type == BTEvent.Type.Connected) {
 			mCurrentBTState.setText(ProjectConfig.btConnectedText);
 			btConnectButton.setText(toDisconnectText);
+			btConnectButton.setVisibility(View.VISIBLE);
 			nextPageButton.setVisibility(View.VISIBLE);
 		}
-		else if(event.type == BTEvent.Type.Disconnected){
-			mCurrentBTState.setText(ProjectConfig.btDisconnectedText);
+		else if(event.type == BTEvent.Type.Disconnected || event.type == BTEvent.Type.ConnectionFailed){
+			if(event.type == BTEvent.Type.Disconnected) {
+				mCurrentBTState.setText(ProjectConfig.btDisconnectedText);
+			}
+			else if(event.type == BTEvent.Type.ConnectionFailed) {
+				mCurrentBTState.setText(ProjectConfig.btConnectionFailedText);
+			}
 			btConnectButton.setText(toConnectText);
+			btConnectButton.setVisibility(View.VISIBLE);
 			nextPageButton.setVisibility(View.GONE);
 		}
 		else if(event.type == BTEvent.Type.DeviceSelected) {
+			Log.d(debug_tag,"device selected");
 			setBTNameAndAddress(event.deviceName, event.deviceAddr);
 		}
+
 
 	}
 

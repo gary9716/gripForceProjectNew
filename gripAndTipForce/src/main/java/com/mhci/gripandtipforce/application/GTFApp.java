@@ -19,11 +19,10 @@ public class GTFApp extends Application{
         super.onCreate();
         Context appContext = getApplicationContext();
         ProjectConfig.initSomeVars(appContext);
-        BluetoothManager.init(appContext);
-        ExceptionHandler.register(appContext, new CustomizedExceptionHandler(), false);
-
         Parse.enableLocalDatastore(this);
         Parse.initialize(this);
+        BluetoothManager.init(appContext);
+//        ExceptionHandler.register(appContext, new CustomizedExceptionHandler(), false);
 
     }
 

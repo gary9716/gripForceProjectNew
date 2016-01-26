@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -116,12 +117,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private String[] mWritableCharBoxNames;
 	private SpenSettingPenInfo penInfo;
 	private SpenSettingEraserInfo eraserInfo;
-	private SpenNoteDoc mSpenNoteDoc;
+	private SpenNoteDoc mSpenNoteDoc = null;
 	private SpenPageDoc[][] mSpenPageDocs = null;
 	private HashMap<SpenSurfaceView, SpenPageDoc> viewModelMap = null;
 	private LocalBroadcastManager mLBCManager = null;
 	private Handler uiThreadHandler = null;
-	private int oneLineSurfaceViewIndex = 1000;
+	private final static int oneLineSurfaceViewIndex = 0;
 	private int charIndex = 0;
 	private int templateIndex = 0;
 	private int mGrade = 1; //default we use first grade
@@ -150,8 +151,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private String currentDataSetName = null;
 	private IntentFilter filter;
 
-//	private final static int mToolType = SpenSurfaceView.TOOL_SPEN;
-
 	//private int reqWidthInPx = 50;
 	//private int reqHeightInPx = 100;
 
@@ -169,7 +168,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		numCharBoxesInCol = 5;
 		numWritableCharBoxCols = 1;
 		numCharBoxesInAPage = numCharBoxesInCol * numWritableCharBoxCols;
-		oneLineSurfaceViewIndex = numCharBoxesInAPage;
 
 		ProjectConfig.startTimestampInMilliSec = System.currentTimeMillis();
 		eventBus = EventBus.getDefault();
@@ -235,9 +233,15 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	};
 
-	private void appendTipForceLogAsync(int charBoxIndex) {
-		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tipForceData[charBoxIndex]));
+	private void appendTipForceLogSync(int charBoxIndex) {
+		txtFileManager.appendLogs(charBoxIndex,tipForceData[charBoxIndex]);
 		tipForceData[charBoxIndex] = new LinkedList<>();
+	}
+
+	private void appendTipForceLogAsync(int charBoxIndex) {
+		List<String> tempList = tipForceData[charBoxIndex];
+		tipForceData[charBoxIndex] = new LinkedList<>();
+		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tempList));
 	}
 
 	public void updateExChars(String[] exChars) {
@@ -294,7 +298,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				for (int j = 0; j < numCharBoxesInCol && numImagesSaved < numImagesToSave; j++) {
 					int charBoxIndex = i * numCharBoxesInCol + j;
 					if(tipForceData[charBoxIndex].size() > 0) {
-						appendTipForceLogAsync(charBoxIndex);
+						appendTipForceLogSync(charBoxIndex);
 					}
 
 					captureSpenSurfaceView(mCharBoxes[i][j],
@@ -342,7 +346,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
 			if(tipForceData[0].size() > 0) {
-				appendTipForceLogAsync(0);
+				appendTipForceLogSync(0);
 			}
 			txtFileManager.closeFile(0);
 
@@ -491,10 +495,12 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	}
 
-	private final int charBoxHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * 2.1f);
-	private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics,ProjectConfig.inchPerCM * 16.1f);
+	private final int charBoxHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.squareCharBoxSizeInCm);
+	private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.oneLineCharBoxSizeInCm);
 	private final int charBoxWidth = charBoxHeight;
-    private final int oneLineWidth = (int)(charBoxWidth * 2f);
+    private final int oneLineWidth = (int)(charBoxWidth * ProjectConfig.oneLineCharBoxFactor);
+
+	private boolean oneLineLayoutIsInited = false;
 
 	private void changeExperimentLayout(CharBoxesLayout layoutSetting) {
 		expLayoutSetting = layoutSetting;
@@ -504,9 +510,64 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			charGroupsContainer.setVisibility(View.VISIBLE);
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
+			if(!oneLineLayoutIsInited) {
+
+				//free unused memory and allocate a new part
+				for (int i = 0; i < numWritableCharBoxCols; i++) {
+					for (int j = 0; j < numCharBoxesInCol; j++) {
+						mCharBoxes[i][j].close();
+					}
+				}
+				allocateNewSpenNoteDoc();
+
+				oneLineLayoutIsInited = true;
+				mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
+				mOneLinePageDoc.setBackgroundColor(Color.WHITE);
+
+				mOneLine = new SpenSurfaceView(mContext);
+				mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
+				mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
+				mOneLine.setZoomable(false);
+
+				mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
+				mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
+				mOneLine.setPenSettingInfo(penInfo);
+				mOneLine.setEraserSettingInfo(eraserInfo);
+				mOneLineContainer.addView(mOneLine);
+
+				mOneLine.setPageDoc(mOneLinePageDoc, true);
+				viewModelMap.put(mOneLine, mOneLinePageDoc);
+			}
+
 			otherUIContainer.setVisibility(View.VISIBLE);
 			charGroupsContainer.setVisibility(View.GONE);
 		}
+	}
+
+	private void allocateNewSpenNoteDoc() {
+		// Get the dimension of the device screen.
+		Display display = getWindowManager().getDefaultDisplay();
+		Rect rect = new Rect();
+		display.getRectSize(rect);
+		// Create SpenNoteDoc
+
+		try {
+			if(mSpenNoteDoc != null) {
+				mSpenNoteDoc.close();
+				mSpenNoteDoc = null;
+			}
+
+			mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
+		} catch (IOException e) {
+			Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+			finish();
+		} catch (Exception e) {
+			e.printStackTrace();
+			finish();
+		}
+
+		Log.d(debug_tag,"SpenNoteDoc allocated");
 	}
 
 	private class BeforeViewShownTask implements Runnable {
@@ -591,7 +652,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 					
 					TextView txtView = new TextView(mContext);
 					txtView.setTag(mExCharNames[charBoxIndex]);
-					txtView.setTextSize((int) mRes.getDimension(R.dimen.exChars_textSize));
+//					txtView.setTextSize((int) mRes.getDimension(R.dimen.exChars_textSize));
+					txtView.setTextSize(TypedValue.COMPLEX_UNIT_MM, ProjectConfig.squareCharBoxSizeInCm * ProjectConfig.exCharSizeToCharBoxRatio * 10);
 					if(font != null) {
 						txtView.setTypeface(font);
 					}
@@ -739,7 +801,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			selectButton(mPenBtn);
 
-			//TODO:set the two bt states together in EventBus handler
 			mBTState = (TextView)mExperimentView.findViewById(R.id.text_bt_state);
 			setBTStateText(mBTState);
 
@@ -773,23 +834,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			Log.d(debug_tag,"Spen init done");
 
-			// Get the dimension of the device screen.
-			Display display = getWindowManager().getDefaultDisplay();
-			Rect rect = new Rect();
-			display.getRectSize(rect);
-			// Create SpenNoteDoc
-			try {
-				mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
-			} catch (IOException e) {
-				Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-				finish();
-			} catch (Exception e) {
-				e.printStackTrace();
-				finish();
-			}
-
-			Log.d(debug_tag,"SpenNoteDoc allocated");
+			allocateNewSpenNoteDoc();
 
 			//String imgFileName = dirPath + "/charbox_bg.png";
 			//saveBitmapToFileCache(bitmap, imgFileName);
@@ -813,9 +858,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 				}
 			}
-
-			mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
-			mOneLinePageDoc.setBackgroundColor(Color.WHITE);
 
 			Log.d(debug_tag,"ready to allocate surface view");
 
@@ -851,20 +893,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 						}
 					}
 
-					mOneLine = new SpenSurfaceView(mContext);
-					mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
-					mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
-					mOneLine.setZoomable(false);
-
-					mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
-					mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
-					mOneLine.setPenSettingInfo(penInfo);
-					mOneLine.setEraserSettingInfo(eraserInfo);
-					mOneLineContainer.addView(mOneLine);
-
-					mOneLine.setPageDoc(mOneLinePageDoc, true);
-					viewModelMap.put(mOneLine, mOneLinePageDoc);
-
                     changeExperimentLayout(CharBoxesLayout.SeparateChars);
 				}
 			});
@@ -888,7 +916,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	private View.OnClickListener mBtnOnClickListener = new View.OnClickListener() {
 		private void setSPenToolActionWithAllCanvases(int toolAction) {
-
 			for(int i = 0;i < numWritableCharBoxCols;i++) {
 				for(int j = 0;j < numCharBoxesInCol;j++) {
 					mCharBoxes[i][j].setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
@@ -899,7 +926,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 		@Override
 		public void onClick(View view) {
-
+			view.setClickable(false);
 			int id = view.getId();
 			isToCleanMode = false;
 			if(id == R.id.penBtn) {
@@ -916,6 +943,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				selectButton(mCleanBtn);
 			}
 			else if(id == R.id.button_experiment_next_step) {
+
 				if(preOrPostInterfaceState == UIState.preExperimentTrial) {
 					if(isExperimentOver) {
 						//the test should be over now.
@@ -939,7 +967,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			else if(id == R.id.nextPageBtn) { //button on experiment view
 				nextPage();
 			}
-
+			view.setClickable(true);
 		}
 	};
 
@@ -957,7 +985,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		@Override
 		public boolean onTouch(View view, MotionEvent event) {
 			if(event.getToolType(0) == SpenSurfaceView.TOOL_SPEN && mPenBtn.isSelected()) {
-				Log.d(debug_tag, event.getPressure() + "," + event.getX() + "," + event.getY());
 				//mPenTipInfo.setText("it's pen");
 				stringBuffer.setLength(0); //clean buffer
 				stringBuffer.append(ProjectConfig.getTimestamp());
@@ -968,7 +995,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				stringBuffer.append(delimiter);
 				stringBuffer.append(event.getPressure());
 
-//				txtFileManager.appendLogWithNewlineSync(mCharboxIndex, stringBuffer.toString());
 				tipForceData[mCharboxIndex].add(stringBuffer.toString());
 				if(tipForceData[mCharboxIndex].size() >= ProjectConfig.maxCachedLogData) {
 					appendTipForceLogAsync(mCharboxIndex);
