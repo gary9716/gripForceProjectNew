@@ -3,8 +3,6 @@ package com.mhci.gripandtipforce.view.activity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -146,7 +144,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
     private Canvas bmpCanvas;
 	private BluetoothManager mBTManager;
 	private EventBus eventBus;
-	private List<String>[] tipForceData;
+//	private List<String>[] tipForceData;
 	private final int firstCharBoxIndex = 0;
 	private String currentDataSetName = null;
 	private IntentFilter filter;
@@ -239,16 +237,16 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	};
 
-	private void appendTipForceLogSync(int charBoxIndex) {
-		txtFileManager.appendLogs(charBoxIndex,tipForceData[charBoxIndex]);
-		tipForceData[charBoxIndex] = new LinkedList<>();
-	}
+//	private void appendTipForceLogSync(int charBoxIndex) {
+//		txtFileManager.appendLogs(charBoxIndex,tipForceData[charBoxIndex]);
+//		tipForceData[charBoxIndex] = new LinkedList<>();
+//	}
 
-	private void appendTipForceLogAsync(int charBoxIndex) {
-		List<String> tempList = tipForceData[charBoxIndex];
-		tipForceData[charBoxIndex] = new LinkedList<>();
-		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tempList));
-	}
+//	private void appendTipForceLogAsync(int charBoxIndex) {
+//		List<String> tempList = tipForceData[charBoxIndex];
+//		tipForceData[charBoxIndex] = new LinkedList<>();
+//		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tempList));
+//	}
 
 	public void updateExChars(String[] exChars) {
 		String[] charsUsedForUpdate = null;
@@ -294,6 +292,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				return;
 			}
 
+
+
 			//save writing and textview images
 			int numImagesToSave = cachedChars.length - charIndex;
 			if (numImagesToSave > numCharBoxesInAPage) {
@@ -302,10 +302,10 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			int numImagesSaved = 0;
 			for (int i = 0; i < numWritableCharBoxCols; i++) {
 				for (int j = 0; j < numCharBoxesInCol && numImagesSaved < numImagesToSave; j++) {
-					int charBoxIndex = i * numCharBoxesInCol + j;
-					if(tipForceData[charBoxIndex].size() > 0) {
-						appendTipForceLogSync(charBoxIndex);
-					}
+//					int charBoxIndex = i * numCharBoxesInCol + j;
+//					if(tipForceData[charBoxIndex].size() > 0) {
+//						appendTipForceLogSync(charBoxIndex);
+//					}
 
 					captureSpenSurfaceView(mCharBoxes[i][j],
 							               ProjectConfig.getGeneratingImgFileName(
@@ -351,9 +351,9 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
-			if(tipForceData[0].size() > 0) {
-				appendTipForceLogSync(0);
-			}
+//			if(tipForceData[0].size() > 0) {
+//				appendTipForceLogSync(0);
+//			}
 			txtFileManager.closeFile(0);
 
 			captureSpenSurfaceView(mOneLine, ProjectConfig.getGeneratingImgFileName(
@@ -794,10 +794,10 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			dirInfo.setOtherInfo(null);
 			templateImgFileManager = new ImgFileManager(dirInfo, mContext);
 
-			tipForceData = new List[numCharBoxesInAPage];
-			for(int i = 0;i < numCharBoxesInAPage;i++) {
-				tipForceData[i] = new LinkedList<>();
-			}
+//			tipForceData = new List[numCharBoxesInAPage];
+//			for(int i = 0;i < numCharBoxesInAPage;i++) {
+//				tipForceData[i] = new LinkedList<>();
+//			}
 
 			/* Experiment View */
 
@@ -1008,6 +1008,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		public boolean onTouch(View view, MotionEvent event) {
 			if(event.getToolType(0) == SpenSurfaceView.TOOL_SPEN && mPenBtn.isSelected()) {
 				//mPenTipInfo.setText("it's pen");
+//				Log.d("testSPen","count:" + event.getPointerCount());
 				stringBuffer.setLength(0); //clean buffer
 				stringBuffer.append(ProjectConfig.getTimestamp());
 				stringBuffer.append(delimiter);
@@ -1016,11 +1017,13 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				stringBuffer.append(event.getY());
 				stringBuffer.append(delimiter);
 				stringBuffer.append(event.getPressure());
+				stringBuffer.append("\r\n");
+				txtFileManager.appendLogSync(mCharboxIndex, stringBuffer.toString());
 
-				tipForceData[mCharboxIndex].add(stringBuffer.toString());
-				if(tipForceData[mCharboxIndex].size() >= ProjectConfig.maxCachedLogData) {
-					appendTipForceLogAsync(mCharboxIndex);
-				}
+//				tipForceData[mCharboxIndex].add(stringBuffer.toString());
+//				if(tipForceData[mCharboxIndex].size() >= ProjectConfig.maxCachedLogData) {
+//					appendTipForceLogAsync(mCharboxIndex);
+//				}
 
 			}
 

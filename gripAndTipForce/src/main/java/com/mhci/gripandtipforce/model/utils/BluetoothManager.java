@@ -34,7 +34,7 @@ public class BluetoothManager{
 	private Handler uiThreadHandler;
 	private StringBuffer stringBuffer;
 	private byte[] dataBuffer;
-	private List<String> cachedLogs;
+//	private List<String> cachedLogs;
 	private boolean toStoreData;
 	private String mUserID;
 	private int remainedBytesToCollect = 0;
@@ -99,9 +99,9 @@ public class BluetoothManager{
 		toStoreData = false;
 		setAutoReconnectingMode(false);
 		disconnect();
-		if(cachedLogs.size() > 0) {
-			txtFileManager.appendLogs(logFileIndex, cachedLogs);
-		}
+//		if(cachedLogs.size() > 0) {
+//			txtFileManager.appendLogs(logFileIndex, cachedLogs);
+//		}
 		txtFileManager.closeFile(logFileIndex);
 	}
 
@@ -188,7 +188,7 @@ public class BluetoothManager{
 		stringBuffer = new StringBuffer();
 		dataBuffer = new byte[totalNumDataPoints];
 		toStoreData = false;
-		cachedLogs = new LinkedList<String>();
+//		cachedLogs = new LinkedList<String>();
 
 		btSPP.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
 			@Override
@@ -257,41 +257,41 @@ public class BluetoothManager{
 //				}
 			}
 
-			private void startDetectHeader(byte[] data, int startIndex) {
-				int numIncomingBytes = data.length;
-				boolean headerNotDetected = true;
-				for (int i = startIndex + 1; i < numIncomingBytes; i++) {
-//					Log.d(DEBUG_TAG, "data:" + (data[i - 1] & 0xFF) + "," + (data[i] & 0xFF));
-					if ( ((data[i - 1] & 0xFF) == 0x0D) && ((data[i] & 0xFF) == 0x0A) ) {
-						Log.d(DEBUG_TAG,"header detected");
-						headerNotDetected = false;
-						int remainedBytesInData = (numIncomingBytes - i - 1);
-						if(remainedBytesInData >= totalNumDataPoints) {
-							parsingDataAndStored(data, i + 1);
-							remainedBytesInData -= totalNumDataPoints;
-							if(remainedBytesInData > 0) {
-								startDetectHeader(data, totalNumDataPoints + i + 1);
-							}
-						}
-						else {
-							copyBytesIntoBuffer(dataBuffer, data, 0, i + 1, remainedBytesInData);
-							remainedBytesToCollect = totalNumDataPoints - remainedBytesInData;
-						}
-						break;
-					}
-				}
-
-				if(headerNotDetected) {
-					remainedBytesToCollect = 0;
-				}
-			}
-
-			private void copyBytesIntoBuffer(byte[] buffer, byte[] src, int startIndexInBuffer, int startIndexInSrc, int numBytesToCopy) {
-				int end = numBytesToCopy + startIndexInSrc;
-				for(int j = startIndexInSrc;j < end;j++) {
-					buffer[startIndexInBuffer + j - startIndexInSrc] = src[j];
-				}
-			}
+//			private void startDetectHeader(byte[] data, int startIndex) {
+//				int numIncomingBytes = data.length;
+//				boolean headerNotDetected = true;
+//				for (int i = startIndex + 1; i < numIncomingBytes; i++) {
+////					Log.d(DEBUG_TAG, "data:" + (data[i - 1] & 0xFF) + "," + (data[i] & 0xFF));
+//					if ( ((data[i - 1] & 0xFF) == 0x0D) && ((data[i] & 0xFF) == 0x0A) ) {
+//						Log.d(DEBUG_TAG,"header detected");
+//						headerNotDetected = false;
+//						int remainedBytesInData = (numIncomingBytes - i - 1);
+//						if(remainedBytesInData >= totalNumDataPoints) {
+//							parsingDataAndStored(data, i + 1);
+//							remainedBytesInData -= totalNumDataPoints;
+//							if(remainedBytesInData > 0) {
+//								startDetectHeader(data, totalNumDataPoints + i + 1);
+//							}
+//						}
+//						else {
+//							copyBytesIntoBuffer(dataBuffer, data, 0, i + 1, remainedBytesInData);
+//							remainedBytesToCollect = totalNumDataPoints - remainedBytesInData;
+//						}
+//						break;
+//					}
+//				}
+//
+//				if(headerNotDetected) {
+//					remainedBytesToCollect = 0;
+//				}
+//			}
+//
+//			private void copyBytesIntoBuffer(byte[] buffer, byte[] src, int startIndexInBuffer, int startIndexInSrc, int numBytesToCopy) {
+//				int end = numBytesToCopy + startIndexInSrc;
+//				for(int j = startIndexInSrc;j < end;j++) {
+//					buffer[startIndexInBuffer + j - startIndexInSrc] = src[j];
+//				}
+//			}
 		});
 	}
 
@@ -335,15 +335,17 @@ public class BluetoothManager{
 				stringBuffer.append(',');
 				stringBuffer.append(((buffer[startIndex + sensorStripIndex*numBytesInOneSensorStrip +  sensorDataIndex]) & 0xFF) - ProjectConfig.minSensorVal);
 			}
-			stringBuffer.append('\n');
+			stringBuffer.append("\r\n");
 		}
 
-		Log.d(DEBUG_TAG,"add to cached logs, len:" + stringBuffer.toString().length());
-		cachedLogs.add(stringBuffer.toString());
-		if(cachedLogs.size() >= ProjectConfig.maxCachedLogData) {
-			mWorkHandler.post(txtFileManager.getAppendListLogTask(logFileIndex, cachedLogs));
-			cachedLogs = new LinkedList<String>();
-		}
+		txtFileManager.appendLogSync(logFileIndex, stringBuffer.toString());
+
+//		Log.d(DEBUG_TAG,"add to cached logs, len:" + stringBuffer.toString().length());
+//		cachedLogs.add(stringBuffer.toString());
+//		if(cachedLogs.size() >= ProjectConfig.maxCachedLogData) {
+//			txtFileManager.appendLogs(logFileIndex, cachedLogs);
+//			cachedLogs = new LinkedList<String>();
+//		}
 
 	}
 

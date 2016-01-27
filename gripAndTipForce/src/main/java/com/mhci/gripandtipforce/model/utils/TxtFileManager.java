@@ -191,18 +191,7 @@ public class TxtFileManager extends FileManager {
 	}
 
 	public void appendLogWithNewlineSync(int arrayIndex, String data) {
-		BufferedWriter writer = null;
-		try {
-			writer = writerArray[arrayIndex];
-		}
-		catch (Exception e) {
-			writer = null;
-		}
-
-		if(writer == null) {
-			return;
-		}
-
+		BufferedWriter writer = writerArray[arrayIndex];
 		try {
 			writer.write(data);
 			writer.newLine();
@@ -211,8 +200,18 @@ public class TxtFileManager extends FileManager {
 //			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
 			Log.d(debug_tag,"exception in AppendLogTask,e:" + e.getLocalizedMessage());
 		}
+	}
+
+	public void appendLogSync(int arrayIndex, String data) {
+		BufferedWriter writer = writerArray[arrayIndex];
+		try {
+			writer.write(data);
+		}
+		catch(Exception e) {
+//			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
+			Log.d(debug_tag,"exception in AppendLogTask,e:" + e.getLocalizedMessage());
+		}
 		//Log.d(debug_tag,"done append log");
-		
 	}
 
 	public void appendLogs(int arrayIndex, List<String> linesOfData) {
@@ -223,7 +222,6 @@ public class TxtFileManager extends FileManager {
 				writer.write(data);
 				writer.newLine();
 			}
-			writer.flush();
 		}
 		catch(Exception e) {
 //			Toast.makeText(mContext, "寫入Log失敗", Toast.LENGTH_LONG).show();
