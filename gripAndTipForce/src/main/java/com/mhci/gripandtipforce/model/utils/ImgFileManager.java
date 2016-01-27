@@ -123,16 +123,19 @@ public class ImgFileManager extends FileManager {
 			int grade,
 			ImageView imageView) {
 
+
 		if(templateImageFiles[grade] == null) {
 			templateImageFiles[grade] = getTemplateImageFile(grade);
+			Log.d("loadImage", "we got " + templateImageFiles[grade].length + " images");
 			if(templateImageFiles[grade] == null) {
-				Toast.makeText(mContext, "模板資料夾不存在", Toast.LENGTH_LONG);
+//				Toast.makeText(mContext, "模板資料夾不存在", Toast.LENGTH_LONG);
 				return errorMsg;
 			}
 		}
 
 		try {
 			if (index >= templateImageFiles[grade].length) {
+				Log.d("loadImage", "index reach end, return endMsg");
 				return endMsg;
 			}
 
@@ -142,6 +145,8 @@ public class ImgFileManager extends FileManager {
 					load(templateImageFiles[grade][index]).
                     //resize(reqWidthInPixels, reqHeightInPixels)
 					into(imageView, callbackAfterLoadingImage); //async function call
+
+			Log.d("loadImage",templateImageFiles[grade][index].getName() + " start loading");
 
             try {
                 progressDialog = null;
@@ -155,12 +160,15 @@ public class ImgFileManager extends FileManager {
                 progressDialog = null;
             }
 
+			Log.d("loadImage", "progress dialog end");
+
 		}
 		catch(Exception e) {
 			if(progressDialog != null) {
 				progressDialog.dismiss();
 			}
-			Toast.makeText(mContext, e.getLocalizedMessage(), Toast.LENGTH_LONG);
+//			Toast.makeText(mContext, e.getLocalizedMessage(), Toast.LENGTH_LONG);
+			Log.d("loadImage", "something went wrong, return errorMsg");
 			return errorMsg;
 		}
 
@@ -176,7 +184,9 @@ public class ImgFileManager extends FileManager {
                     progressDialog.dismiss();
                 }
                 catch(Exception e) {}
+
 			}
+			Log.d("loadImage","image was loaded");
 		}
 
 		@Override

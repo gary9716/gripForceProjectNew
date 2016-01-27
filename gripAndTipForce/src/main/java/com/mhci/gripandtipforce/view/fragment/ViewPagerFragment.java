@@ -66,9 +66,10 @@ public final class ViewPagerFragment extends Fragment {
             mStartButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                Intent intent = new Intent(mContext, InputDataActivity.class);
-                startActivity(intent);
-                ViewPagerFragment.this.getActivity().finish();
+                    view.setClickable(false);
+                    Intent intent = new Intent(mContext, InputDataActivity.class);
+                    startActivity(intent);
+                    ViewPagerFragment.this.getActivity().finish();
                 }
             });
 

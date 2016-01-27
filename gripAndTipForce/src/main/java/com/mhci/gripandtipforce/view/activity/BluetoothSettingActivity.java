@@ -160,7 +160,9 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity {
 	private void setViewUnclickable(View v) {
 		v.setClickable(false);
 	}
-	
+
+	private boolean buttonHasBeenClicked = false;
+
 	private OnClickListener buttonListener = new OnClickListener() {
 		
 		@Override
@@ -194,7 +196,12 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity {
 				// Add the buttons
 				builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						if(mCurrentSelectedBTName != null && mCurrentSelectedBTAddress != null) { 
+						if(buttonHasBeenClicked) {
+							return;
+						}
+						buttonHasBeenClicked = true;
+
+						if(mCurrentSelectedBTName != null && mCurrentSelectedBTAddress != null) {
 							//save current selected BT and use this setting
 							Editor editor = mBTSettings.edit();
 							editor.putString(ProjectConfig.Key_Preference_LastSelectedBT, mCurrentSelectedBTName);

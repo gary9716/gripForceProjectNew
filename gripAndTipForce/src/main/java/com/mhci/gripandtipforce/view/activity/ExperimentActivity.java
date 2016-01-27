@@ -151,6 +151,11 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private String currentDataSetName = null;
 	private IntentFilter filter;
 
+	private static int charBoxMarginLeftOrRight;
+	private static int charBoxMarginBottom;
+	private RelativeLayout subViewsContainer;
+	private RelativeLayout.LayoutParams charGroupsContainerLayoutParams;
+
 	//private int reqWidthInPx = 50;
 	//private int reqHeightInPx = 100;
 
@@ -175,6 +180,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		uiThreadHandler = new Handler(getMainLooper());
 		packageName = getPackageName();
 		mRes = getResources();
+		charBoxMarginLeftOrRight = (int)mRes.getDimension(R.dimen.char_box_left_or_right_margin);
+		charBoxMarginBottom = (int)mRes.getDimension(R.dimen.char_box_bottom_margin);
 
 		mLBCManager = LocalBroadcastManager.getInstance(mContext);
 		filter = new IntentFilter(Action_update_chars);
@@ -215,7 +222,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				"下一個畫面需要些讀取時間,請稍候")).execute();
 	}
 
-	//TODO: fix with EventBus
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -435,6 +441,9 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			numCharBoxesInAPage = 1;
 			layoutChangeTo = CharBoxesLayout.OneLine;
 			toChangeExperimentLayout = true;
+			if(!oneLineLayoutIsInited) {
+				prepareOneLineLayout();
+			}
 			currentDataSetName = ProjectConfig.templateImageDataSetName();
 			loadNextImageIntoExCharGroup();
             if(isOneLineSessionOver) {
@@ -498,51 +507,113 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	}
 
 	private final int charBoxHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.squareCharBoxSizeInCm);
-	private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.oneLineCharBoxSizeInCm);
+	//private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.oneLineCharBoxSizeInCm);
 	private final int charBoxWidth = charBoxHeight;
     private final int oneLineWidth = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * 4f);
 
 	private boolean oneLineLayoutIsInited = false;
 
+	private void prepareOneLineLayout() {
+		oneLineLayoutIsInited = true;
+
+		//free unused memory,remove old views and allocate a new part
+		for (int i = 0; i < numWritableCharBoxCols; i++) {
+			for (int j = 0; j < numCharBoxesInCol; j++) {
+				mCharBoxes[i][j].close();
+			}
+		}
+		allocateNewSpenNoteDoc();
+
+
+		otherUIContainer = new LinearLayout(mContext);
+		mOneLineContainer = new RelativeLayout(mContext);
+		mExampleCharsGroup = new ImageView(mContext);
+		subViewsContainer.addView(otherUIContainer);
+
+		LinearLayout.LayoutParams imgRLP = new LinearLayout.LayoutParams(
+				oneLineWidth,
+				LinearLayout.LayoutParams.WRAP_CONTENT
+		);
+
+		LinearLayout.LayoutParams oneLine_LP = new LinearLayout.LayoutParams(
+				oneLineWidth,
+				LinearLayout.LayoutParams.MATCH_PARENT
+		);
+
+		otherUIContainer.setLayoutParams(charGroupsContainerLayoutParams);
+		otherUIContainer.setOrientation(LinearLayout.HORIZONTAL);
+
+		if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
+			imgRLP.leftMargin = charBoxMarginLeftOrRight;
+			//otherUI_LP.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
+		}
+		else {
+			imgRLP.rightMargin = charBoxMarginLeftOrRight;
+			//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
+		}
+
+		mExampleCharsGroup.setLayoutParams(imgRLP);
+		mExampleCharsGroup.setBackgroundColor(Color.WHITE);
+
+		mOneLineContainer.setLayoutParams(oneLine_LP);
+		mOneLineContainer.setBackgroundColor(Color.WHITE);
+
+		if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
+			otherUIContainer.addView(mOneLineContainer);
+			otherUIContainer.addView(mExampleCharsGroup);
+			//otherUI_LP.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
+		}
+		else {
+			otherUIContainer.addView(mExampleCharsGroup);
+			otherUIContainer.addView(mOneLineContainer);
+			//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
+		}
+
+		mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
+		mOneLinePageDoc.setBackgroundColor(Color.WHITE);
+
+		mOneLine = new SpenSurfaceView(mContext);
+		mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
+		mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
+		mOneLine.setZoomable(false);
+
+		mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
+		mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
+		mOneLine.setPenSettingInfo(penInfo);
+		mOneLine.setEraserSettingInfo(eraserInfo);
+		mOneLineContainer.addView(mOneLine);
+
+		mOneLine.setPageDoc(mOneLinePageDoc, true);
+		viewModelMap.put(mOneLine, mOneLinePageDoc);
+
+	}
+
 	private void changeExperimentLayout(CharBoxesLayout layoutSetting) {
 		expLayoutSetting = layoutSetting;
 
 		if(expLayoutSetting == CharBoxesLayout.SeparateChars) {
-			otherUIContainer.setVisibility(View.GONE);
-			charGroupsContainer.setVisibility(View.VISIBLE);
+			if(otherUIContainer != null) {
+				otherUIContainer.setVisibility(View.GONE);
+			}
+
+			if(charGroupsContainer != null) {
+				charGroupsContainer.setVisibility(View.VISIBLE);
+			}
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
 			if(!oneLineLayoutIsInited) {
-
-				//free unused memory and allocate a new part
-				for (int i = 0; i < numWritableCharBoxCols; i++) {
-					for (int j = 0; j < numCharBoxesInCol; j++) {
-						mCharBoxes[i][j].close();
-					}
-				}
-				allocateNewSpenNoteDoc();
-
-				oneLineLayoutIsInited = true;
-				mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
-				mOneLinePageDoc.setBackgroundColor(Color.WHITE);
-
-				mOneLine = new SpenSurfaceView(mContext);
-				mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
-				mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
-				mOneLine.setZoomable(false);
-
-				mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
-				mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
-				mOneLine.setPenSettingInfo(penInfo);
-				mOneLine.setEraserSettingInfo(eraserInfo);
-				mOneLineContainer.addView(mOneLine);
-
-				mOneLine.setPageDoc(mOneLinePageDoc, true);
-				viewModelMap.put(mOneLine, mOneLinePageDoc);
+				prepareOneLineLayout();
 			}
 
-			otherUIContainer.setVisibility(View.VISIBLE);
-			charGroupsContainer.setVisibility(View.GONE);
+			if(otherUIContainer != null) {
+				otherUIContainer.setVisibility(View.VISIBLE);
+			}
+
+			if(charGroupsContainer != null) {
+				charGroupsContainer.setVisibility(View.GONE);
+				charGroupsContainer.removeAllViews();
+				charGroupsContainer = null;
+			}
 		}
 	}
 
@@ -582,23 +653,16 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			inflater = LayoutInflater.from(mContext);
 		}
 
-		RelativeLayout subViewsContainer;
-
 		private void experimentViewArrangement() {
-
-			otherUIContainer = new LinearLayout(mContext);
-			mOneLineContainer = new RelativeLayout(mContext);
-			mExampleCharsGroup = new ImageView(mContext);
 
 			charGroupsContainer = new LinearLayout(mContext);
 			charGroupsContainer.setOrientation(LinearLayout.VERTICAL);
 
-			RelativeLayout.LayoutParams charGroupsContainerLayoutParams = new RelativeLayout.LayoutParams(
+			charGroupsContainerLayoutParams = new RelativeLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,  //width
 					LinearLayout.LayoutParams.WRAP_CONTENT); //height
 
 			charGroupsContainerLayoutParams.topMargin = 70;
-
 			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
 				charGroupsContainerLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				charGroupsContainerLayoutParams.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
@@ -610,7 +674,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			charGroupsContainer.setLayoutParams(charGroupsContainerLayoutParams);
 			subViewsContainer = (RelativeLayout)mExperimentView.findViewById(R.id.spenViewContainer);
-			subViewsContainer.addView(otherUIContainer);
 			subViewsContainer.addView(charGroupsContainer);
 
 			RelativeLayout.LayoutParams writableCharBox_LP =
@@ -627,9 +690,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
             bmpCanvas = new Canvas();
 
-			int charBoxMarginLeftOrRight = (int)mRes.getDimension(R.dimen.char_box_left_or_right_margin);
-			int charBoxMarginBottom = (int)mRes.getDimension(R.dimen.char_box_bottom_margin);
-			
+
 			LinearLayout.LayoutParams charGroupLayoutParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT
@@ -687,47 +748,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 				}
 			}
-
-			LinearLayout.LayoutParams imgRLP = new LinearLayout.LayoutParams(
-					oneLineWidth,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-			);
-
-			LinearLayout.LayoutParams oneLine_LP = new LinearLayout.LayoutParams(
-					oneLineWidth,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-			);
-
-			otherUIContainer.setLayoutParams(charGroupsContainerLayoutParams);
-			otherUIContainer.setOrientation(LinearLayout.HORIZONTAL);
-
-			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
-				imgRLP.leftMargin = charBoxMarginLeftOrRight;
-				//otherUI_LP.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
-			}
-			else {
-				imgRLP.rightMargin = charBoxMarginLeftOrRight;
-				//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
-			}
-
-
-			mExampleCharsGroup.setLayoutParams(imgRLP);
-			mExampleCharsGroup.setBackgroundColor(Color.WHITE);
-
-			mOneLineContainer.setLayoutParams(oneLine_LP);
-			mOneLineContainer.setBackgroundColor(Color.WHITE);
-
-			if(mUserDominantHand.equals(ProjectConfig.leftHand)) {
-				otherUIContainer.addView(mOneLineContainer);
-				otherUIContainer.addView(mExampleCharsGroup);
-				//otherUI_LP.rightMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
-			}
-			else {
-				otherUIContainer.addView(mExampleCharsGroup);
-				otherUIContainer.addView(mOneLineContainer);
-				//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
-			}
-
 
 		}
 		
@@ -1155,7 +1175,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		super.onResume();
 		eventBus.register(this);
 		mLBCManager.registerReceiver(broadcastReceiver, filter);
-
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class ProjectConfig {
 	public final static String debug_tag = "ProjectConfig";
 	public final static String projectName = "GripForce"; 
 	public static boolean useSystemBarHideAndShow = true;
-	public final static boolean useRealSDCard = false;
+	public final static boolean useRealSDCard = true;
 
 	public static final int numBytesPerSensorStrip = 19;
 	public static final int numSensorStrips = 5;
