@@ -38,6 +38,7 @@ public class ProjectConfig {
 
 	public static final UUID UUIDForBT = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	public static final String txtFileExtension = ".txt";
+	public static final String csvFileExtension = ".csv";
 	public static final String imgFileExtension = ".png";
 
 	private static RealStoragePathLibrary storageLib;
@@ -307,7 +308,7 @@ public class ProjectConfig {
 		strBuffer.append(gripForceLogPrefix);
 		strBuffer.append('_');
 		strBuffer.append(userID);
-		strBuffer.append(txtFileExtension);
+		strBuffer.append(csvFileExtension);
 		return strBuffer.toString();
 	}
 	

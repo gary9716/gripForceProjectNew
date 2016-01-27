@@ -22,6 +22,8 @@ import com.mhci.gripandtipforce.R;
 import com.mhci.gripandtipforce.model.utils.TxtFileManager;
 import com.mhci.gripandtipforce.model.ProjectConfig;
 
+import java.util.LinkedList;
+
 public class InputDataActivity extends CustomizedBaseFragmentActivity {
 	
 	public final static int fileIndex = 0;
@@ -78,17 +80,19 @@ public class InputDataActivity extends CustomizedBaseFragmentActivity {
 	private void saveIntoFile(View fragmentView) {
 		Resources res = getResources();
 		String packageName = getPackageName();
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(getFieldName("Disp_1", fragmentView, res, packageName) + ":" + mName + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_2", fragmentView, res, packageName) + ":" + mGender + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_3", fragmentView, res, packageName) + ":" + mBirthday + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_4", fragmentView, res, packageName) + ":" + mDominant_hand + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_5", fragmentView, res, packageName) + ":" + mUserGrade + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_6", fragmentView, res, packageName) + ":" + mLivingCity + ProjectConfig.userInfo_delimiter);
-		stringBuffer.append(getFieldName("Disp_7", fragmentView, res, packageName) + ":" + mUserID);
-		txtFileManager.appendLogWithNewlineSync(fileIndex, stringBuffer.toString());
+		LinkedList<String> userData = new LinkedList<>();
+		userData.add(getFieldName("Disp_1", fragmentView, res, packageName) + ":" + mName);
+		userData.add(getFieldName("Disp_2", fragmentView, res, packageName) + ":" + mGender);
+		userData.add(getFieldName("Disp_3", fragmentView, res, packageName) + ":" + mBirthday);
+		userData.add(getFieldName("Disp_4", fragmentView, res, packageName) + ":" + mDominant_hand);
+		userData.add(getFieldName("Disp_5", fragmentView, res, packageName) + ":" + mUserGrade);
+		userData.add(getFieldName("Disp_6", fragmentView, res, packageName) + ":" + mLivingCity);
+		userData.add(getFieldName("Disp_7", fragmentView, res, packageName) + ":" + mUserID);
+		txtFileManager.appendLogs(fileIndex, userData);
 	}
-	
+
+	private boolean positiveButtonClicked = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,17 +125,20 @@ public class InputDataActivity extends CustomizedBaseFragmentActivity {
 					public void onClick(DialogInterface dialog, int id) {
 						// User clicked OK button
 						//fresh buffered data
-						getUserInfo(fragmentView);
-						FileDirInfo dirInfo = new FileDirInfo(FileType.PersonalInfo, ProjectConfig.getDirpathByID(mUserID), null);
-						txtFileManager = new TxtFileManager(dirInfo, mContext);
-						txtFileManager.createOrOpenLogFileSync(ProjectConfig.getPersonalInfoFileName(mUserID), fileIndex);
-						saveIntoPreference();
-						saveIntoFile(fragmentView);
-						txtFileManager.closeFile(fileIndex);
-						//add loading animation
-						Intent intent = new Intent(mContext,BluetoothSettingActivity.class);
-						startActivity(intent);
-						finish();
+						if(!positiveButtonClicked) {
+							positiveButtonClicked = true;
+							getUserInfo(fragmentView);
+							FileDirInfo dirInfo = new FileDirInfo(FileType.PersonalInfo, ProjectConfig.getDirpathByID(mUserID), null);
+							txtFileManager = new TxtFileManager(dirInfo, mContext);
+							txtFileManager.createOrOpenLogFileSync(ProjectConfig.getPersonalInfoFileName(mUserID), fileIndex);
+							saveIntoPreference();
+							saveIntoFile(fragmentView);
+							txtFileManager.closeFile(fileIndex);
+							//add loading animation
+							Intent intent = new Intent(mContext, BluetoothSettingActivity.class);
+							startActivity(intent);
+							finish();
+						}
 					}
 				});
 				

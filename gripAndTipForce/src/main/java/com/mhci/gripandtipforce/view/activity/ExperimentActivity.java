@@ -377,7 +377,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 						cachedChars,
 						logIndex,
 						firstCharBoxIndex,
-						numCharBoxesInAPage),
+						numCharBoxesInAPage,
+						ProjectConfig.csvFileExtension),
                 null)).execute();
 
 	}
@@ -453,7 +454,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				cachedChars,
 				logIndex,
 				firstCharBoxIndex,
-				numCharBoxesInAPage));
+				numCharBoxesInAPage,
+				ProjectConfig.csvFileExtension));
 
 
 		Runnable[] taskArray = new Runnable[taskList.size()];
@@ -498,7 +500,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private final int charBoxHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.squareCharBoxSizeInCm);
 	private final int charBoxOneLineHeight = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * ProjectConfig.oneLineCharBoxSizeInCm);
 	private final int charBoxWidth = charBoxHeight;
-    private final int oneLineWidth = (int)(charBoxWidth * ProjectConfig.oneLineCharBoxFactor);
+    private final int oneLineWidth = Utils.inchToPixels(this.mMetrics, ProjectConfig.inchPerCM * 4f);
 
 	private boolean oneLineLayoutIsInited = false;
 
@@ -1040,7 +1042,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		// Initialize Pen settings
 		penInfo = new SpenSettingPenInfo();
 		penInfo.color = Color.BLACK;
-		penInfo.size = 1;
+		penInfo.size = 5;
 
 		// Initialize Eraser settings
 		eraserInfo = new SpenSettingEraserInfo();

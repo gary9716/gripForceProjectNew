@@ -113,7 +113,8 @@ public class TxtFileManager extends FileManager {
 												   String[] cachedChars,
 												   int logIndex,
 												   int charBoxIndex,
-												   int numFilesToCreateOrOpen) {
+												   int numFilesToCreateOrOpen,
+												   String fileExtension) {
 		return new CreateOrOpenCharLogFileTask(
 				logType,
 				userID,
@@ -121,7 +122,8 @@ public class TxtFileManager extends FileManager {
 				cachedChars,
 				logIndex,
 				charBoxIndex,
-				numFilesToCreateOrOpen);
+				numFilesToCreateOrOpen,
+				fileExtension);
 	}
 
 	private class CreateOrOpenCharLogFileTask implements Runnable {
@@ -133,6 +135,7 @@ public class TxtFileManager extends FileManager {
 		int mNumFilesToCreateOrOpen;
 		String mFileNamePrefix = null;
 		String[] cachedChars = null;
+		String mFileExtension = null;
 
 		public CreateOrOpenCharLogFileTask(String logType,
 										   String userID,
@@ -140,12 +143,14 @@ public class TxtFileManager extends FileManager {
 										   String[] cachedChars,
 										   int logIndex,
 										   int charBoxIndex,
-										   int numFilesToCreateOrOpen) {
+										   int numFilesToCreateOrOpen,
+										   String fileExtension) {
 			this.cachedChars = cachedChars;
 			this.mFileNamePrefix = logType + "_" + userID + "_" + dataSetName + "_";
 			this.mLogIndex = logIndex;
 			this.mCharBoxIndex = charBoxIndex;
 			this.mNumFilesToCreateOrOpen = numFilesToCreateOrOpen;
+			this.mFileExtension = fileExtension;
 		}
 
 		@Override
@@ -158,7 +163,7 @@ public class TxtFileManager extends FileManager {
 			}
 			for(int i = 0;i < numLogsToLoad;i++) {
 				createOrOpenLogFileSync(
-						mFileNamePrefix + (mLogIndex + i + 1) + ProjectConfig.txtFileExtension,
+						mFileNamePrefix + (mLogIndex + i + 1) + mFileExtension,
 						mCharBoxIndex + i);
 			}
 		}
