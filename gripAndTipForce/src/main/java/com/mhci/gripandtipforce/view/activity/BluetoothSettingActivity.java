@@ -83,6 +83,7 @@ public class BluetoothSettingActivity extends CustomizedBaseFragmentActivity {
 		BTEvent sharedBTEvent = new BTEvent();
 		sharedBTEvent.type = BTEvent.Type.Disconnected;
 		setRelatedUI(sharedBTEvent);
+
 	}
 
 	@Override

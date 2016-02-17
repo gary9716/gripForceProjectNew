@@ -24,7 +24,7 @@ public class ProjectConfig {
 	public final static String debug_tag = "ProjectConfig";
 	public final static String projectName = "GripForce"; 
 	public static boolean useSystemBarHideAndShow = true;
-	public final static boolean useRealSDCard = false;
+	public static boolean useRealSDCard = false;
 
 	public static final int numBytesPerSensorStrip = 19;
 	public static final int numSensorStrips = 5;
@@ -395,7 +395,7 @@ public class ProjectConfig {
 
 	public static Typeface getFontFromFile(String fontName) {
 		try {
-			File fontFile = new File(ProjectConfig.externalSDCardPath + "/" + ProjectConfig.projectName + "/Fonts/" + fontName);
+			File fontFile = new File(defaultProjectDirPath + "/Fonts/" + fontName);
 			return Typeface.createFromFile(fontFile);
 		}
 		catch(Exception e) {

@@ -53,7 +53,9 @@ import com.samsung.android.sdk.pen.SpenSettingEraserInfo;
 import com.samsung.android.sdk.pen.SpenSettingPenInfo;
 import com.samsung.android.sdk.pen.document.SpenNoteDoc;
 import com.samsung.android.sdk.pen.document.SpenPageDoc;
+import com.samsung.android.sdk.pen.engine.SpenHoverListener;
 import com.samsung.android.sdk.pen.engine.SpenLongPressListener;
+import com.samsung.android.sdk.pen.engine.SpenSimpleView;
 import com.samsung.android.sdk.pen.engine.SpenSurfaceView;
 import com.samsung.android.sdk.pen.engine.SpenTouchListener;
 import com.samsung.android.sdk.pen.pg.tool.SDKUtils;
@@ -80,8 +82,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private ImageView mCleanBtn;
 	private RelativeLayout mNextPageBtn;
 	private TextView mPenTipInfo = null;
-	private SpenSurfaceView[][] mCharBoxes = null;
-	private SpenSurfaceView mOneLine = null;
+	private SpenSimpleView[][] mCharBoxes = null;
+	private SpenSimpleView mOneLine = null;
 	private SpenPageDoc mOneLinePageDoc = null;
 	private RelativeLayout mOneLineContainer = null;
 	private RelativeLayout[][] mWritableCharBoxContainers = null;
@@ -117,7 +119,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private SpenSettingEraserInfo eraserInfo;
 	private SpenNoteDoc mSpenNoteDoc = null;
 	private SpenPageDoc[][] mSpenPageDocs = null;
-	private HashMap<SpenSurfaceView, SpenPageDoc> viewModelMap = null;
+	private HashMap<SpenSimpleView, SpenPageDoc> viewModelMap = null;
 	private LocalBroadcastManager mLBCManager = null;
 	private Handler uiThreadHandler = null;
 	private final static int oneLineSurfaceViewIndex = 0;
@@ -522,8 +524,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				mCharBoxes[i][j].close();
 			}
 		}
-		allocateNewSpenNoteDoc();
-
+//		allocateNewSpenNoteDoc();
 
 		otherUIContainer = new LinearLayout(mContext);
 		mOneLineContainer = new RelativeLayout(mContext);
@@ -569,13 +570,15 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			//otherUI_LP.leftMargin = (int)mRes.getDimension(R.dimen.charGroupsMarginLeftOrRight);
 		}
 
-		mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
-		mOneLinePageDoc.setBackgroundColor(Color.WHITE);
+//		mOneLinePageDoc = mSpenNoteDoc.insertPage(oneLineSurfaceViewIndex);
+//		mOneLinePageDoc.setBackgroundColor(Color.WHITE);
 
-		mOneLine = new SpenSurfaceView(mContext);
-		mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex, mOneLine));
-		mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
-		mOneLine.setZoomable(false);
+//		mOneLine = new SpenSurfaceView(mContext);
+		mOneLine = new SpenSimpleView(mContext, oneLineWidth, oneLineWidth);
+		mOneLine.setTouchListener(new CustomizedSpenTouchListener(oneLineSurfaceViewIndex));
+		mOneLine.setHoverListener(new CustomizedSpenHoverListener(oneLineSurfaceViewIndex));
+//		mOneLine.setLongPressListener(new customizedLongPressedListener(mOneLine, oneLineSurfaceViewIndex));
+//		mOneLine.setZoomable(false);
 
 		mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
 		mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, SpenSurfaceView.ACTION_STROKE);
@@ -583,8 +586,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		mOneLine.setEraserSettingInfo(eraserInfo);
 		mOneLineContainer.addView(mOneLine);
 
-		mOneLine.setPageDoc(mOneLinePageDoc, true);
-		viewModelMap.put(mOneLine, mOneLinePageDoc);
+//		mOneLine.setPageDoc(mOneLinePageDoc, true);
+//		viewModelMap.put(mOneLine, mOneLinePageDoc);
 
 	}
 
@@ -690,7 +693,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
             bmpCanvas = new Canvas();
 
-
 			LinearLayout.LayoutParams charGroupLayoutParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT
@@ -755,11 +757,11 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		public void run() {
 
 			//init variables
-			viewModelMap = new HashMap<SpenSurfaceView, SpenPageDoc>(numCharBoxesInAPage);
-			mSpenPageDocs = new SpenPageDoc[numWritableCharBoxCols][numCharBoxesInCol];
+//			viewModelMap = new HashMap<SpenSimpleView, SpenPageDoc>(numCharBoxesInAPage);
+//			mSpenPageDocs = new SpenPageDoc[numWritableCharBoxCols][numCharBoxesInCol];
 			mExampleCharsTextView = new TextView[numWritableCharBoxCols][numCharBoxesInCol];
 			mWritableCharBoxContainers = new RelativeLayout[numWritableCharBoxCols][numCharBoxesInCol];
-			mCharBoxes = new SpenSurfaceView[numWritableCharBoxCols][numCharBoxesInCol];
+			mCharBoxes = new SpenSimpleView[numWritableCharBoxCols][numCharBoxesInCol];
 
 			mExCharNames = new String[numCharBoxesInAPage];
 			for(int i = 0;i < numCharBoxesInAPage;i++) {
@@ -856,30 +858,30 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 			Log.d(debug_tag,"Spen init done");
 
-			allocateNewSpenNoteDoc();
+//			allocateNewSpenNoteDoc();
 
 			//String imgFileName = dirPath + "/charbox_bg.png";
 			//saveBitmapToFileCache(bitmap, imgFileName);
-			String imgFileName = null;
-
-			for(int i = 0;i < numWritableCharBoxCols;i++) {
-				for(int j = 0;j < numCharBoxesInCol;j++) {
-					// Add a Page to NoteDoc, get an instance, and set it to the member variable.
-
-					if(imgFileName != null) {
-						//mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j, 0, imgFileName, SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
-						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
-						mSpenPageDocs[i][j].setBackgroundImage(imgFileName);
-						mSpenPageDocs[i][j].setBackgroundImageMode(SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
-					}
-					else {
-						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
-						mSpenPageDocs[i][j].setBackgroundColor(Color.WHITE);
-					}
-					mSpenPageDocs[i][j].clearHistory();
-
-				}
-			}
+//			String imgFileName = null;
+//
+//			for(int i = 0;i < numWritableCharBoxCols;i++) {
+//				for(int j = 0;j < numCharBoxesInCol;j++) {
+//					// Add a Page to NoteDoc, get an instance, and set it to the member variable.
+//
+//					if(imgFileName != null) {
+//						//mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j, 0, imgFileName, SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
+//						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
+//						mSpenPageDocs[i][j].setBackgroundImage(imgFileName);
+//						mSpenPageDocs[i][j].setBackgroundImageMode(SpenPageDoc.BACKGROUND_IMAGE_MODE_FIT);
+//					}
+//					else {
+//						mSpenPageDocs[i][j] = mSpenNoteDoc.insertPage(i * numCharBoxesInCol + j);
+//						mSpenPageDocs[i][j].setBackgroundColor(Color.WHITE);
+//					}
+//					mSpenPageDocs[i][j].clearHistory();
+//
+//				}
+//			}
 
 			Log.d(debug_tag,"ready to allocate surface view");
 
@@ -893,14 +895,17 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 					//we still need around 2 sec to run this part of code
 					for (int i = 0; i < numWritableCharBoxCols; i++) {
 						for (int j = 0; j < numCharBoxesInCol; j++) {
-							mCharBoxes[i][j] = new SpenSurfaceView(mContext);
-							SpenSurfaceView surfaceView = mCharBoxes[i][j];
+//							mCharBoxes[i][j] = new SpenSurfaceView(mContext);
+							mCharBoxes[i][j] = new SpenSimpleView(mContext, charBoxWidth, charBoxHeight);
+							SpenSimpleView surfaceView = mCharBoxes[i][j];
+							surfaceView.setBackgroundColor(Color.WHITE);
 
 							//surfaceView.setClickable(true);
 							//to disable hover effect, just disable the hover effect in the system setting
-							surfaceView.setTouchListener(new CustomizedSpenTouchListener(i * numCharBoxesInCol + j, surfaceView));
-							surfaceView.setLongPressListener(new customizedLongPressedListener(surfaceView, i * numCharBoxesInCol + j));
-							surfaceView.setZoomable(false);
+							surfaceView.setTouchListener(new CustomizedSpenTouchListener(i * numCharBoxesInCol + j));
+							surfaceView.setHoverListener(new CustomizedSpenHoverListener(i * numCharBoxesInCol + j));
+//							surfaceView.setLongPressListener(new customizedLongPressedListener(surfaceView, i * numCharBoxesInCol + j));
+//							surfaceView.setZoomable(false);
 
 							//currently we disable finger's function. Maybe we could use it as eraser in the future.
 							surfaceView.setToolTypeAction(SpenSurfaceView.TOOL_FINGER, SpenSurfaceView.ACTION_NONE);
@@ -909,8 +914,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 							surfaceView.setEraserSettingInfo(eraserInfo);
 							((RelativeLayout) mExperimentView.findViewWithTag(mWritableCharBoxNames[i * numCharBoxesInCol + j])).addView(surfaceView);
 
-							surfaceView.setPageDoc(mSpenPageDocs[i][j], true);
-							viewModelMap.put(surfaceView, mSpenPageDocs[i][j]);
+//							surfaceView.setPageDoc(mSpenPageDocs[i][j], true);
+//							viewModelMap.put(surfaceView, mSpenPageDocs[i][j]);
 
 						}
 					}
@@ -993,22 +998,51 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	};
 
-	private class CustomizedSpenTouchListener implements SpenTouchListener{
+	private class CustomizedSpenHoverListener implements SpenHoverListener {
+
 		private final static char delimiter = ',';
 		private int mCharboxIndex = -1;
 		//private SpenSurfaceView mSurfaceView = null;
+		private StringBuffer stringBuffer;
+
+		public CustomizedSpenHoverListener(int charBoxIndex) {
+			mCharboxIndex = charBoxIndex;
+			stringBuffer = new StringBuffer();
+		}
+
+		@Override
+		public boolean onHover(View view, MotionEvent event) {
+
+			stringBuffer.setLength(0); //clean buffer
+			stringBuffer.append(ProjectConfig.getTimestamp());
+			stringBuffer.append(delimiter);
+			stringBuffer.append(event.getX());
+			stringBuffer.append(delimiter);
+			stringBuffer.append(event.getY());
+			stringBuffer.append(delimiter);
+			stringBuffer.append(-1);
+			stringBuffer.append("\r\n");
+
+			txtFileManager.appendLogSync(mCharboxIndex, stringBuffer.toString());
+
+			return false;
+		}
+
+	}
+
+	private class CustomizedSpenTouchListener implements SpenTouchListener{
+		private final static char delimiter = ',';
+		private int mCharboxIndex = -1;
 		private StringBuffer stringBuffer = new StringBuffer();
 
-		public CustomizedSpenTouchListener(int charboxIndex, SpenSurfaceView surfaceView) {
+		public CustomizedSpenTouchListener(int charboxIndex) {
 			mCharboxIndex = charboxIndex;
-			//mSurfaceView = surfaceView;
 		}
 
 		@Override
 		public boolean onTouch(View view, MotionEvent event) {
 			if(event.getToolType(0) == SpenSurfaceView.TOOL_SPEN && mPenBtn.isSelected()) {
-				//mPenTipInfo.setText("it's pen");
-//				Log.d("testSPen","count:" + event.getPointerCount());
+
 				stringBuffer.setLength(0); //clean buffer
 				stringBuffer.append(ProjectConfig.getTimestamp());
 				stringBuffer.append(delimiter);
@@ -1019,11 +1053,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				stringBuffer.append(event.getPressure());
 				stringBuffer.append("\r\n");
 				txtFileManager.appendLogSync(mCharboxIndex, stringBuffer.toString());
-
-//				tipForceData[mCharboxIndex].add(stringBuffer.toString());
-//				if(tipForceData[mCharboxIndex].size() >= ProjectConfig.maxCachedLogData) {
-//					appendTipForceLogAsync(mCharboxIndex);
-//				}
 
 			}
 
@@ -1050,8 +1079,8 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
         genImgFileManager.saveBMP(bufferBMP, fileName, true);
 	}
 
-	private void captureSpenSurfaceView(SpenSurfaceView surfaceView, String fileName) {
-		Bitmap imgBitmap = surfaceView.captureCurrentView(true);
+	private void captureSpenSurfaceView(SpenSimpleView surfaceView, String fileName) {
+		Bitmap imgBitmap = surfaceView.captureCurrentView();
 		genImgFileManager.saveBMP(imgBitmap, fileName, true);
 	}
 
@@ -1073,10 +1102,14 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	}
 
-	private void cleanSurfacView(SpenSurfaceView view) {
-		SpenPageDoc model = viewModelMap.get(view);
-		model.removeAllObject();
-		view.update();
+	private void cleanSurfacView(SpenSimpleView view) {
+
+		view.clearScreen();
+
+//		SpenPageDoc model = viewModelMap.get(view);
+//		model.removeAllObject();
+//		view.update();
+
 		return;
 	}
 	
