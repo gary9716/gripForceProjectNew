@@ -51,8 +51,8 @@ import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.pen.Spen;
 import com.samsung.android.sdk.pen.SpenSettingEraserInfo;
 import com.samsung.android.sdk.pen.SpenSettingPenInfo;
-import com.samsung.android.sdk.pen.document.SpenNoteDoc;
-import com.samsung.android.sdk.pen.document.SpenPageDoc;
+//import com.samsung.android.sdk.pen.document.SpenNoteDoc;
+//import com.samsung.android.sdk.pen.document.SpenPageDoc;
 import com.samsung.android.sdk.pen.engine.SpenHoverListener;
 import com.samsung.android.sdk.pen.engine.SpenLongPressListener;
 import com.samsung.android.sdk.pen.engine.SpenSimpleView;
@@ -84,7 +84,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private TextView mPenTipInfo = null;
 	private SpenSimpleView[][] mCharBoxes = null;
 	private SpenSimpleView mOneLine = null;
-	private SpenPageDoc mOneLinePageDoc = null;
+//	private SpenPageDoc mOneLinePageDoc = null;
 	private RelativeLayout mOneLineContainer = null;
 	private RelativeLayout[][] mWritableCharBoxContainers = null;
 	private TextView[][] mExampleCharsTextView;
@@ -117,9 +117,9 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 	private String[] mWritableCharBoxNames;
 	private SpenSettingPenInfo penInfo;
 	private SpenSettingEraserInfo eraserInfo;
-	private SpenNoteDoc mSpenNoteDoc = null;
-	private SpenPageDoc[][] mSpenPageDocs = null;
-	private HashMap<SpenSimpleView, SpenPageDoc> viewModelMap = null;
+//	private SpenNoteDoc mSpenNoteDoc = null;
+//	private SpenPageDoc[][] mSpenPageDocs = null;
+//	private HashMap<SpenSimpleView, SpenPageDoc> viewModelMap = null;
 	private LocalBroadcastManager mLBCManager = null;
 	private Handler uiThreadHandler = null;
 	private final static int oneLineSurfaceViewIndex = 0;
@@ -239,17 +239,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	};
 
-//	private void appendTipForceLogSync(int charBoxIndex) {
-//		txtFileManager.appendLogs(charBoxIndex,tipForceData[charBoxIndex]);
-//		tipForceData[charBoxIndex] = new LinkedList<>();
-//	}
-
-//	private void appendTipForceLogAsync(int charBoxIndex) {
-//		List<String> tempList = tipForceData[charBoxIndex];
-//		tipForceData[charBoxIndex] = new LinkedList<>();
-//		mWorkerThreadHandler.post(txtFileManager.getAppendListLogTask(charBoxIndex,tempList));
-//	}
-
 	public void updateExChars(String[] exChars) {
 		String[] charsUsedForUpdate = null;
 
@@ -294,8 +283,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				return;
 			}
 
-
-
 			//save writing and textview images
 			int numImagesToSave = cachedChars.length - charIndex;
 			if (numImagesToSave > numCharBoxesInAPage) {
@@ -304,10 +291,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			int numImagesSaved = 0;
 			for (int i = 0; i < numWritableCharBoxCols; i++) {
 				for (int j = 0; j < numCharBoxesInCol && numImagesSaved < numImagesToSave; j++) {
-//					int charBoxIndex = i * numCharBoxesInCol + j;
-//					if(tipForceData[charBoxIndex].size() > 0) {
-//						appendTipForceLogSync(charBoxIndex);
-//					}
 
 					captureSpenSurfaceView(mCharBoxes[i][j],
 							               ProjectConfig.getGeneratingImgFileName(
@@ -315,6 +298,7 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
                                                    mUserID,
                                                    currentDataSetName,
                                                    charIndex + numImagesSaved));
+
                     captureExampleTextView(mExampleCharsTextView[i][j],
                                            ProjectConfig.getGeneratingImgFileName(
                                                    ProjectConfig.textviewImgPrefix,
@@ -353,9 +337,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			}
 		}
 		else if(expLayoutSetting == CharBoxesLayout.OneLine) {
-//			if(tipForceData[0].size() > 0) {
-//				appendTipForceLogSync(0);
-//			}
 			txtFileManager.closeFile(0);
 
 			captureSpenSurfaceView(mOneLine, ProjectConfig.getGeneratingImgFileName(
@@ -467,7 +448,6 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				firstCharBoxIndex,
 				numCharBoxesInAPage,
 				ProjectConfig.csvFileExtension));
-
 
 		Runnable[] taskArray = new Runnable[taskList.size()];
 
@@ -620,31 +600,31 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		}
 	}
 
-	private void allocateNewSpenNoteDoc() {
-		// Get the dimension of the device screen.
-		Display display = getWindowManager().getDefaultDisplay();
-		Rect rect = new Rect();
-		display.getRectSize(rect);
-		// Create SpenNoteDoc
-
-		try {
-			if(mSpenNoteDoc != null) {
-				mSpenNoteDoc.close();
-				mSpenNoteDoc = null;
-			}
-
-			mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
-		} catch (IOException e) {
-			Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-			finish();
-		} catch (Exception e) {
-			e.printStackTrace();
-			finish();
-		}
-
-		Log.d(debug_tag,"SpenNoteDoc allocated");
-	}
+//	private void allocateNewSpenNoteDoc() {
+//		// Get the dimension of the device screen.
+//		Display display = getWindowManager().getDefaultDisplay();
+//		Rect rect = new Rect();
+//		display.getRectSize(rect);
+//		// Create SpenNoteDoc
+//
+//		try {
+//			if(mSpenNoteDoc != null) {
+//				mSpenNoteDoc.close();
+//				mSpenNoteDoc = null;
+//			}
+//
+//			mSpenNoteDoc = new SpenNoteDoc(mContext, rect.width(), rect.height());
+//		} catch (IOException e) {
+//			Toast.makeText(mContext, "Cannot create new NoteDoc", Toast.LENGTH_SHORT).show();
+//			e.printStackTrace();
+//			finish();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			finish();
+//		}
+//
+//		Log.d(debug_tag,"SpenNoteDoc allocated");
+//	}
 
 	private class BeforeViewShownTask implements Runnable {
 
@@ -943,11 +923,17 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 
 	private View.OnClickListener mBtnOnClickListener = new View.OnClickListener() {
 		private void setSPenToolActionWithAllCanvases(int toolAction) {
-			for(int i = 0;i < numWritableCharBoxCols;i++) {
-				for(int j = 0;j < numCharBoxesInCol;j++) {
-					mCharBoxes[i][j].setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
+			if(expLayoutSetting == CharBoxesLayout.SeparateChars) {
+				for (int i = 0; i < numWritableCharBoxCols; i++) {
+					for (int j = 0; j < numCharBoxesInCol; j++) {
+						mCharBoxes[i][j].setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
+					}
 				}
 			}
+			else if(expLayoutSetting == CharBoxesLayout.OneLine){
+				mOneLine.setToolTypeAction(SpenSurfaceView.TOOL_SPEN, toolAction);
+			}
+
 			return;
 		}
 
@@ -964,11 +950,11 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_ERASER);
 				selectButton(mEraserBtn);
 			}
-			else if(id == R.id.cleanBtn) {
-				isToCleanMode = true;
-				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_NONE);
-				selectButton(mCleanBtn);
-			}
+//			else if(id == R.id.cleanBtn) {
+//				isToCleanMode = true;
+//				setSPenToolActionWithAllCanvases(SpenSurfaceView.ACTION_NONE);
+//				selectButton(mCleanBtn);
+//			}
 			else if(id == R.id.button_experiment_next_step) {
 
 				if(preOrPostInterfaceState == UIState.preExperimentTrial) {
@@ -1113,54 +1099,54 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 		return;
 	}
 	
-	private class customizedLongPressedListener implements SpenLongPressListener {
-
-		private SpenSurfaceView bindedSurfaceView = null;
-		private int mCharBoxIndex;
-
-		public customizedLongPressedListener(SpenSurfaceView surfaceView, int charBoxIndex) {
-			bindedSurfaceView = surfaceView;
-			mCharBoxIndex = charBoxIndex;
-		}
-
-		private void cleanCurrentlySelectedView() {
-			txtFileManager.appendLogWithNewlineSync(mCharBoxIndex, ProjectConfig.restartMark);
-			SpenPageDoc model = viewModelMap.get(bindedSurfaceView);
-			model.removeAllObject();
-			bindedSurfaceView.update();
-			return;
-		}
-
-		@Override
-			public void onLongPressed(MotionEvent arg0) {
-				if(isToCleanMode) {
-
-					bindedSurfaceView.setSelected(true);
-
-					// 1. Instantiate an AlertDialog.Builder with its constructor
-					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-					// 2. Chain together various setter methods to set the dialog characteristics
-					builder.setMessage("你即將清除手寫的筆跡，確定嗎？");
-
-					// Add the buttons
-					builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							// User clicked OK button
-							cleanCurrentlySelectedView();
-						}
-					});
-
-					builder.setNegativeButton("取消", null);
-
-					// 3. Get the AlertDialog from create()
-					(builder.create()).show();
-
-				}
-
-			}
-
-	}
+//	private class customizedLongPressedListener implements SpenLongPressListener {
+//
+//		private SpenSurfaceView bindedSurfaceView = null;
+//		private int mCharBoxIndex;
+//
+//		public customizedLongPressedListener(SpenSurfaceView surfaceView, int charBoxIndex) {
+//			bindedSurfaceView = surfaceView;
+//			mCharBoxIndex = charBoxIndex;
+//		}
+//
+//		private void cleanCurrentlySelectedView() {
+//			txtFileManager.appendLogWithNewlineSync(mCharBoxIndex, ProjectConfig.restartMark);
+//			SpenPageDoc model = viewModelMap.get(bindedSurfaceView);
+//			model.removeAllObject();
+//			bindedSurfaceView.update();
+//			return;
+//		}
+//
+//		@Override
+//			public void onLongPressed(MotionEvent arg0) {
+//				if(isToCleanMode) {
+//
+//					bindedSurfaceView.setSelected(true);
+//
+//					// 1. Instantiate an AlertDialog.Builder with its constructor
+//					AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//
+//					// 2. Chain together various setter methods to set the dialog characteristics
+//					builder.setMessage("你即將清除手寫的筆跡，確定嗎？");
+//
+//					// Add the buttons
+//					builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog, int id) {
+//							// User clicked OK button
+//							cleanCurrentlySelectedView();
+//						}
+//					});
+//
+//					builder.setNegativeButton("取消", null);
+//
+//					// 3. Get the AlertDialog from create()
+//					(builder.create()).show();
+//
+//				}
+//
+//			}
+//
+//	}
 
 	private void selectButton(View v) {
 		// Enable or disable the button according to the current mode.
@@ -1232,14 +1218,14 @@ public class ExperimentActivity extends CustomizedBaseFragmentActivity {
 			mEraserSettingView.close();
 		}
 
-		if (mSpenNoteDoc != null) {
-			try {
-				mSpenNoteDoc.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			mSpenNoteDoc = null;
-		}
+//		if (mSpenNoteDoc != null) {
+//			try {
+//				mSpenNoteDoc.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			mSpenNoteDoc = null;
+//		}
 	}
 
 	private void savingData() {
